@@ -3,8 +3,11 @@ package kwetter.domain;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
 
-
+@Named("User")
+@RequestScoped
 public class User  {
     private static final long serialVersionUID = 1L;
 

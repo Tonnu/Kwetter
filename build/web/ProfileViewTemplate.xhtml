@@ -15,19 +15,24 @@
     <h:body>
         <div id="container">
             <div id="profile-title">
-                <ui:insert name="profile-name">Profile name</ui:insert>
+                <div id="profile-name"><ui:insert name="profile-name">Profile name</ui:insert></div>
+                <div id="profile-picture"><ui:insert name="profile-picture">Profile picture</ui:insert></div>
             </div>
             <div id="box-left">
                 <ui:insert name="profile-tweets">Profile tweets</ui:insert>
             </div>
             <div id="box-right">
-                <div id="box">
-                    <ui:insert name="profile-details">Profile details</ui:insert>
+                <div id="profile-details">
+                    <div id="profile-name"><b>Name:</b> <ui:insert name="profile-name">Profile name</ui:insert></div>
+                    <div id="profile-location"><b>Location:</b> <ui:insert name="profile-location">Profile location</ui:insert></div>
+                    <div id="profile-bio"><b>Bio</b>: <ui:insert name="profile-bio">Profile bio</ui:insert></div>
                 </div>
-                <div id="box">
+                <div id="profile-stats">
+                    stats<br />
                     <ui:insert name="profile-stats">Profile stats</ui:insert>
                 </div>
-                <div id="box">
+                <div id="profile-followers">
+                    followers<br />
                     <ui:insert name="profile-followers">Profile followers</ui:insert>
                 </div>
             </div>
