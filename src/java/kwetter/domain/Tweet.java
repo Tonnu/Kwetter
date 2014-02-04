@@ -1,9 +1,10 @@
 package kwetter.domain;
 
+import java.io.Serializable;
 import java.util.Date;
+import javax.inject.Named;
 
-
-public class Tweet {
+public class Tweet implements Serializable{
     private static final long serialVersionUID = 1L;
     private String tweet;
     private Date postDate;
@@ -14,6 +15,7 @@ public class Tweet {
 
     public Tweet(String tweet) {
         this.tweet = tweet;
+        
     }
 
     public Tweet(String tweet, Date datum, String vanaf) {

@@ -17,7 +17,23 @@ body{
     border-radius: 5px 5px 5px 5px;
     height:80%;
 }
+
+#tweets{
+    width:100%;
+}
+#tweets td{
+    padding:10px;
+    border-bottom: 1px solid #e0e0e0;
+}
+#tweet-date{
+    color:#e0e0e0;
+}
+#tweeter{
+    font-weight:bold;
+}
 #profile-title{
+    text-align: center;
+    color:white;
     width:30%;
     margin-left:26.5%;
     position:relative;
@@ -42,13 +58,13 @@ body{
 }
 
 #container{
-/*    position:absolute;
-    margin-left:19%;
-    margin-right:19%;
-    width:62%;
-    height:100%;*/
+    /*    position:absolute;
+        margin-left:19%;
+        margin-right:19%;
+        width:62%;
+        height:100%;*/
     //background-color: red;
-    
+
     height:100%;
 }
 

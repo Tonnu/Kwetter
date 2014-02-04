@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <body>
+
+        <ui:composition template="./ProfileViewTemplate.xhtml">
+
+            <ui:define name="title">
+                <h:outputText value="#{kwetter.find(0).name}"></h:outputText>
+            </ui:define>
+
+            <ui:define name="profile-name">
+                <h:outputText value="#{kwetter.find(0).name}"></h:outputText>
+            </ui:define>
+
+            <ui:define name="profile-picture">
+                profile-picture
+            </ui:define>
+
+            <ui:define name="profile-tweets">
+                <h:dataTable id="tweets" value="#{kwetter.find(0).tweets}" var="tweet">
+                    <h:column>
+                        <b><h:outputText value="#{kwetter.find(0).name}" /></b>
+                        &nbsp;&nbsp;<h:outputText id="tweet-date" value="#{tweet.getDatum().toLocaleString()}" /><br />
+                        <h:outputText value="#{tweet.tweet}" />
+                    </h:column>
+                </h:dataTable>
+            </ui:define>
+            
+            <ui:define name="profile-location">
+                <h:outputText value="#{kwetter.find(0).web}"></h:outputText><br/>
+            </ui:define>
+
+            <ui:define name="profile-bio">
+                <h:outputText value="#{kwetter.find(0).bio}"></h:outputText><br/>
+            </ui:define>
+
+            <ui:define name="profile-stats"><br/>
+                profile-stats
+            </ui:define>
+
+            <ui:define name="profile-followers"><br/>
+                profile-followers
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

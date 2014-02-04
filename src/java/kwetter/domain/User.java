@@ -1,14 +1,12 @@
 package kwetter.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import javax.faces.bean.RequestScoped;
-import javax.inject.Named;
 
-@Named("User")
-@RequestScoped
-public class User  {
+public class User implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     private String name;
@@ -71,13 +69,11 @@ public class User  {
         this.tweets = tweets;
     }
 
-
-    public Boolean addFollowing(User following){
+    public Boolean addFollowing(User following) {
         return this.following.add(following);
     }
 
-  
-    public Boolean addTweet(Tweet tweet){
+    public Boolean addTweet(Tweet tweet) {
         return this.tweets.add(tweet);
     }
 
@@ -95,7 +91,7 @@ public class User  {
             return false;
         }
         User other = (User) object;
-        return this.hashCode()==other.hashCode();
+        return this.hashCode() == other.hashCode();
     }
 
     @Override

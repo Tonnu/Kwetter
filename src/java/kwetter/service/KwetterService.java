@@ -2,18 +2,24 @@ package kwetter.service;
 
 import java.util.Date;
 import java.util.List;
+import javax.ejb.Stateless;
+import javax.faces.bean.ApplicationScoped;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import kwetter.dao.UserDAO;
 import kwetter.dao.UserDAOCollectionImpl;
 import kwetter.domain.Tweet;
 import kwetter.domain.User;
-//import javax.ejb.Stateless;
 
-//@Stateless
+@Stateless
+@ApplicationScoped
+@ManagedBean(name="kwetter")
 public class KwetterService {
 
     private UserDAO userDAO = new UserDAOCollectionImpl();
 
     public KwetterService() {
+        System.out.println("Launching KwetterService");
         initUsers();
     }
 
@@ -34,7 +40,7 @@ public class KwetterService {
     }
 
     public User find(Object id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return userDAO.find((Long)id);
     }
 
     public int count() {
@@ -56,7 +62,6 @@ public class KwetterService {
         u1.addTweet(t1);
         u1.addTweet(t2);
         u1.addTweet(t3);
-
 
         userDAO.create(u1);
         userDAO.create(u2);

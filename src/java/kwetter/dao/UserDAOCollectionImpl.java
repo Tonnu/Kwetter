@@ -40,6 +40,6 @@ public class UserDAOCollectionImpl implements UserDAO {
 
     @Override
     public User find(Long id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return users.get(id.intValue());
     }
 }
