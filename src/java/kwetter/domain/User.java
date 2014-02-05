@@ -14,6 +14,7 @@ public class User implements Serializable {
     private String bio;
 
     private Collection<User> following = new ArrayList();
+    private Collection<User> followers = new ArrayList();
     private Collection<Tweet> tweets = new ArrayList();
 
     public User() {
@@ -70,6 +71,7 @@ public class User implements Serializable {
     }
 
     public Boolean addFollowing(User following) {
+        following.addFollower(this); //add new follower to the other user;
         return this.following.add(following);
     }
 
@@ -97,6 +99,18 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "twitter.domain.User[naam=" + name + "]";
+    }
+
+    public Collection<User> getFollowers() {
+        return Collections.unmodifiableCollection(followers);
+    }
+
+    public Boolean addFollower(User _follower) {
+        return this.followers.add(_follower);
+    }
+
+    public void setFollowers(Collection<User> followers) {
+        this.followers = followers;
     }
 
 }

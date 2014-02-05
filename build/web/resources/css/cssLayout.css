@@ -21,10 +21,13 @@ body{
 #tweets{
     width:100%;
 }
+
 #tweets td{
     padding:10px;
     border-bottom: 1px solid #e0e0e0;
 }
+
+//#tweets tr:nth-child(odd) {background-color: #f7f7f7;}
 #tweet-date{
     color:#e0e0e0;
 }

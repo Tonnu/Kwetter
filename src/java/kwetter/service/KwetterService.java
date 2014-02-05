@@ -5,7 +5,6 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import kwetter.dao.UserDAO;
 import kwetter.dao.UserDAOCollectionImpl;
 import kwetter.domain.Tweet;

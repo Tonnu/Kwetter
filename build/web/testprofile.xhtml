@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
     <body>
 
         <ui:composition template="./ProfileViewTemplate.xhtml">
@@ -38,11 +39,22 @@
             </ui:define>
 
             <ui:define name="profile-stats"><br/>
-                profile-stats
+                <div id="profile-following"> 
+                    <b>#{ fn: length(kwetter.find(0).following)} </b>Following
+                </div>
+                <div id="profile-followers">
+                    <b>#{fn:length(kwetter.find(0).followers)}</b> Followers
+                </div>
+                <div id="profile-tweets">
+                    <b>#{fn:length(kwetter.find(0).tweets)}</b> Tweets
+                </div>
             </ui:define>
-
-            <ui:define name="profile-followers"><br/>
-                profile-followers
+            <ui:define name="profile-followers">
+                <h:dataTable id="profile-followers-table" value="#{kwetter.find(0).followers}" var="follower">
+                    <h:column>
+                        <h:outputText id="follower" value="#{follower.name}" />
+                    </h:column>
+                </h:dataTable>
             </ui:define>
 
         </ui:composition>
