@@ -3,20 +3,29 @@ package kwetter.service;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
-import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import kwetter.dao.UserDAO;
 import kwetter.dao.UserDAOCollectionImpl;
 import kwetter.domain.Tweet;
 import kwetter.domain.User;
 
 @Stateless
-@ApplicationScoped
 @ManagedBean(name="kwetter")
 public class KwetterService {
 
     private UserDAO userDAO = new UserDAOCollectionImpl();
+    
+    private String showdata ="tweets";
 
+    public String getShowdata() {
+        return showdata;
+    }
+
+    public void setShowdata(String showdata) {
+        this.showdata = showdata;
+    }
+    
     public KwetterService() {
         System.out.println("Launching KwetterService");
         initUsers();
@@ -54,7 +63,12 @@ public class KwetterService {
         u1.addFollowing(u2);
         u1.addFollowing(u3);
         u1.addFollowing(u4);
-
+        
+        u1.addFollower(u4);
+        u1.addFollower(u3);
+        u1.addFollower(u2);
+        u1.addFollower(u1);
+        
         Tweet t1 = new Tweet("Hallo", new Date(), "PC");
         Tweet t2 = new Tweet("Hallo again", new Date(), "PC");
         Tweet t3 = new Tweet("Hallo where are you", new Date(), "PC");

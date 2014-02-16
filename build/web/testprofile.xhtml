@@ -3,7 +3,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    </h:head>
     <body>
 
         <ui:composition template="./ProfileViewTemplate.xhtml">
@@ -11,7 +16,6 @@
             <ui:define name="title">
                 <h:outputText value="#{kwetter.find(0).name}"></h:outputText>
             </ui:define>
-
             <ui:define name="profile-name">
                 <h:outputText value="#{kwetter.find(0).name}"></h:outputText>
             </ui:define>
@@ -20,16 +24,30 @@
                 profile-picture
             </ui:define>
 
-            <ui:define name="profile-tweets">
-                <h:dataTable id="tweets" value="#{kwetter.find(0).tweets}" var="tweet">
-                    <h:column>
-                        <b><h:outputText value="#{kwetter.find(0).name}" /></b>
-                        &nbsp;&nbsp;<h:outputText id="tweet-date" value="#{tweet.getDatum().toLocaleString()}" /><br />
-                        <h:outputText value="#{tweet.tweet}" />
-                    </h:column>
-                </h:dataTable>
-            </ui:define>
-            
+            <div id="data-table">
+                <ui:define name="main-data">
+                    <h:form id="main-data-form">
+                        <h:dataTable id="tweets" value="#{kwetter.find(0).tweets}" var="tweet" rendered="#{kwetter.showdata.equals('tweets')}">
+                            <h:column>
+                                <b><h:outputText value="#{kwetter.find(0).name}" /></b>
+                                &nbsp;&nbsp;<h:outputText id="tweet-date" value="#{tweet.getDatum().toLocaleString()}" /><br />
+                                <h:outputText value="#{tweet.tweet}" />
+                            </h:column>
+                        </h:dataTable>
+                        <h:dataTable id="followers" value="#{kwetter.find(0).followers}" var="follower" rendered="#{kwetter.showdata.equals('followers')}">
+                            <h:column>
+                                <h:outputText value="#{follower.name}" />
+                            </h:column>
+                        </h:dataTable>
+                        <h:dataTable id="following" value="#{kwetter.find(0).following}" var="following" rendered="#{kwetter.showdata.equals('following')}">
+                            <h:column>
+                                <h:outputText value="#{following.name}" />
+                            </h:column>
+                        </h:dataTable>
+                    </h:form>
+                </ui:define>
+            </div>
+
             <ui:define name="profile-location">
                 <h:outputText value="#{kwetter.find(0).web}"></h:outputText><br/>
             </ui:define>
@@ -37,27 +55,35 @@
             <ui:define name="profile-bio">
                 <h:outputText value="#{kwetter.find(0).bio}"></h:outputText><br/>
             </ui:define>
-
-            <ui:define name="profile-stats"><br/>
-                <div id="profile-following"> 
-                    <b>#{ fn: length(kwetter.find(0).following)} </b>Following
-                </div>
-                <div id="profile-followers">
-                    <b>#{fn:length(kwetter.find(0).followers)}</b> Followers
-                </div>
-                <div id="profile-tweets">
-                    <b>#{fn:length(kwetter.find(0).tweets)}</b> Tweets
-                </div>
+            <ui:define name="profile-stats"><br/>  
+                <h:form>
+                    <div id="profile-following"> 
+                        <h:commandLink action="#{kwetter.setShowdata('following')}" >
+                            <f:ajax event="action" render=":main-data-form" execute="@form" />
+                            <b>#{ fn: length(kwetter.find(0).following)} </b>Following
+                        </h:commandLink>
+                    </div>
+                    <div id="profile-followers">
+                        <h:commandLink action="#{kwetter.setShowdata('followers')}" >
+                            <b>#{fn:length(kwetter.find(0).followers)}</b> Followers
+                            <f:ajax event="action" render=":main-data-form" execute="@form" />
+                        </h:commandLink>
+                    </div>
+                    <div id="profile-tweets">
+                        <h:commandLink action="#{kwetter.setShowdata('tweets')}" >
+                            <b>#{fn:length(kwetter.find(0).tweets)}</b> Tweets
+                            <f:ajax event="action" render=":main-data-form" execute="@form" />
+                        </h:commandLink>
+                    </div>
+                </h:form>
             </ui:define>
             <ui:define name="profile-followers">
-                <h:dataTable id="profile-followers-table" value="#{kwetter.find(0).followers}" var="follower">
+                <h:dataTable id="profile-followers-table" value="#{kwetter.find(0).followers}" var="follower" >
                     <h:column>
                         <h:outputText id="follower" value="#{follower.name}" />
                     </h:column>
                 </h:dataTable>
             </ui:define>
-
         </ui:composition>
-
     </body>
 </html>

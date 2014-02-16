@@ -3,8 +3,9 @@ package kwetter.domain;
 import java.io.Serializable;
 import java.util.Date;
 import javax.inject.Named;
+import kwetter.interfaces.GenericData;
 
-public class Tweet implements Serializable{
+public class Tweet implements Serializable, GenericData{
     private static final long serialVersionUID = 1L;
     private String tweet;
     private Date postDate;

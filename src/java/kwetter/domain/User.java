@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import kwetter.interfaces.GenericData;
 
-public class User implements Serializable {
+public class User implements Serializable, GenericData {
 
     private static final long serialVersionUID = 1L;
 
@@ -16,6 +18,8 @@ public class User implements Serializable {
     private Collection<User> following = new ArrayList();
     private Collection<User> followers = new ArrayList();
     private Collection<Tweet> tweets = new ArrayList();
+
+    private Collection<GenericData> listData = new ArrayList();
 
     public User() {
     }
@@ -50,11 +54,21 @@ public class User implements Serializable {
         return web;
     }
 
+    public Collection<GenericData> getListData() {
+        return listData;
+    }
+
+    public void setListData(Collection<GenericData> listData) {
+        this.listData = listData;
+    }
+
     public void setWeb(String web) {
         this.web = web;
     }
 
     public Collection<User> getFollowing() {
+        listData.clear();
+        listData.addAll(following);
         return Collections.unmodifiableCollection(following);
     }
 
@@ -63,6 +77,8 @@ public class User implements Serializable {
     }
 
     public Collection<Tweet> getTweets() {
+        listData.clear();
+        listData.addAll(tweets);
         return Collections.unmodifiableCollection(tweets);
     }
 
