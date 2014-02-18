@@ -18,16 +18,54 @@ body{
     height:80%;
 }
 
-#tweets{
+#profile-details{
+    font-size:medium;
+}
+
+.main_table{
     width:100%;
 }
 
-#tweets td{
+#main-navbar{
+    list-style-type: none;
+    font-size-adjust: 0.5;
+    background-color:white;
+    padding:10px;
+    border: 0.5px solid black;
+    position:fixed;
+    width:100%;
+    top:0.1px;
+    left:0;
+    height:35px;
+    padding-top:15px;
+    z-index:100;
+}
+
+#main-navbar li{
+    display: inline;
+    font-size: 14px;
+    margin-left:30px;
+}
+
+#main-navbar #search{
+    float:right;
+    position:fixed;
+    top:25px;
+    right:15px;
+    font-size:14px;
+}
+
+.main_table td{
     padding:10px;
     border-bottom: 1px solid #e0e0e0;
 }
 
-//#tweets tr:nth-child(odd) {background-color: #f7f7f7;}
+#stats-nav{
+    display: inline;
+    list-style-type: none;
+    font-size-adjust: 0.5;
+}
+
 #tweet-date{
     color:#e0e0e0;
 }
@@ -61,14 +99,10 @@ body{
 }
 
 #container{
-    /*    position:absolute;
-        margin-left:19%;
-        margin-right:19%;
-        width:62%;
-        height:100%;*/
-    //background-color: red;
-
     height:100%;
+    padding-top:70px;
+    z-index:0;
+    
 }
 
 #top {

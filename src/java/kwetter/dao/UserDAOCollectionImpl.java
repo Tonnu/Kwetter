@@ -34,6 +34,15 @@ public class UserDAOCollectionImpl implements UserDAO {
     }
 
     @Override
+    public User findUsingUsername(String username) {
+        for(User u: users){
+            if(u.getName().equals(username)) return u;
+        }
+        
+        return null;
+    }
+
+    @Override
     public void remove(User user) {
         users.remove(user);
     }

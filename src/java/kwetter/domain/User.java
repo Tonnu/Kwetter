@@ -4,10 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import kwetter.interfaces.GenericData;
 
-public class User implements Serializable, GenericData {
+public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -19,7 +17,6 @@ public class User implements Serializable, GenericData {
     private Collection<User> followers = new ArrayList();
     private Collection<Tweet> tweets = new ArrayList();
 
-    private Collection<GenericData> listData = new ArrayList();
 
     public User() {
     }
@@ -54,21 +51,13 @@ public class User implements Serializable, GenericData {
         return web;
     }
 
-    public Collection<GenericData> getListData() {
-        return listData;
-    }
-
-    public void setListData(Collection<GenericData> listData) {
-        this.listData = listData;
-    }
 
     public void setWeb(String web) {
         this.web = web;
     }
 
     public Collection<User> getFollowing() {
-        listData.clear();
-        listData.addAll(following);
+
         return Collections.unmodifiableCollection(following);
     }
 
@@ -77,8 +66,6 @@ public class User implements Serializable, GenericData {
     }
 
     public Collection<Tweet> getTweets() {
-        listData.clear();
-        listData.addAll(tweets);
         return Collections.unmodifiableCollection(tweets);
     }
 
@@ -127,6 +114,10 @@ public class User implements Serializable, GenericData {
 
     public void setFollowers(Collection<User> followers) {
         this.followers = followers;
+    }
+
+    public void removeTweet(Tweet t) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
