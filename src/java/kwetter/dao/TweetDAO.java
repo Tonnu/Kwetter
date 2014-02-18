@@ -7,6 +7,7 @@
 package kwetter.dao;
 
 import java.util.List;
+import java.util.Map;
 import kwetter.domain.Tweet;
 import kwetter.domain.User;
 
@@ -22,6 +23,5 @@ public interface TweetDAO {
         void create(Tweet t, User u);
         
         void remove(Tweet t, User u);
-        
         
 }

@@ -1,38 +1,82 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 
+    <h:head>
+        <f:metadata>
+            <f:viewParam name="loggedInUser" value="#{kwetter.selectedUser.name}" />
+        </f:metadata>
+    </h:head>
     <body>
 
-        <ui:composition template="./ProfileViewTemplate.xhtml">
+        <ui:composition template="./mainViewTemplate.xhtml">
 
             <ui:define name="title">
-                title
+                <h:outputText value="#{kwetter.selectedUser.name}"></h:outputText>
             </ui:define>
 
+            <ui:define name="main-navbar">
+                <div id="main-navbar">
+                    <ul>
+                        <li>Home</li>
+                        <li>Me</li>
+                        <li>Connect</li>
+                        <li>Discover</li>
+                    </ul>
+                    <h:form id="search-form">
+                        <h:inputText id="search" value="#{kwetter.searchQuery}">
+                            <f:ajax event="keyup" render=":search-results" listener="#{kwetter.findTweetsContaining()}" execute="@form"/> 
+                            <f:ajax event="keyup" render=":timeline-form" execute="@form"/> 
+                        </h:inputText>
+                    </h:form>            
+                </div>
+            </ui:define>
+
+            <h:form id="search-results">
+                <h:dataTable id="results" class="main_table" value="#{kwetter.foundTweets}" var="found">
+                    <h:column>
+                        <h:outputText value="#{found.tweet}" />
+                    </h:column>
+                </h:dataTable>
+            </h:form>
             <ui:define name="profile-name">
-                profile-name
+                <h:outputText value="#{kwetter.selectedUser.name}"></h:outputText>
             </ui:define>
 
             <ui:define name="profile-picture">
                 profile-picture
             </ui:define>
 
-            <ui:define name="main-data">
-                main-data
-            </ui:define>
-
-            <ui:define name="profile-location">
-                profile-location
-            </ui:define>
-
-            <ui:define name="profile-bio">
-                profile-bio
-            </ui:define>
-
             <ui:define name="profile-stats">
-                profile-stats
+                <h:form>
+                    <ul id="stats-nav">
+                        <li>
+                            <div id="profile-tweets">
+                                <h:commandLink action="#{kwetter.displayProfile(kwetter.loggedInUser.name, 'tweets')}" value="Your Tweets #{fn:length(kwetter.selectedUser.tweets)}">
+                                </h:commandLink><br />
+                                <h:outputText value="#{kwetter.selectedUser.lastTweet.datum.toLocaleString()}" /><br />
+                                <h:outputText value="#{kwetter.selectedUser.lastTweet.tweet}" /> <br />
+                            </div>
+                        </li>
+                        <li><br />
+                            <div id="profile-following"> 
+                                <h:commandLink action="#{kwetter.displayProfile(kwetter.loggedInUser.name, 'following')}" value="#{fn: length(kwetter.selectedUser.following)} Following" >
+                                </h:commandLink>
+                            </div>
+                        </li>
+                        <li>
+                            <div id="profile-followers">
+                                <h:commandLink action="#{kwetter.displayProfile(kwetter.loggedInUser.name, 'followers')}" value="#{fn:length(kwetter.selectedUser.followers)} Followers" >
+                                </h:commandLink>
+                            </div>
+                        </li>
+                    </ul>
+                </h:form>            
             </ui:define>
 
             <ui:define name="profile-followers">

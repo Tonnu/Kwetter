@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="./css/default.css"/>
+        <h:outputStylesheet name="./css/cssLayout.css"/>
+        <h:outputStylesheet name="./css/maincss.css"/>
+        <title><ui:insert name="title">Facelets Template</ui:insert></title>
+    </h:head>
+
+    <h:body>
+        <ui:insert name="main-navbar">
+            <ul>
+                <li>Home</li>
+                <li>Me</li>
+                <li>Connect</li>
+                <li>Discover</li>
+            </ul>
+            <h:form id="search-form">
+                <h:inputText id="search" value="#{kwetter.searchQuery}">
+                    <f:ajax event="keyup" render=":search-results" listener="#{kwetter.findTweetsContaining()}" execute="@form"/> 
+                    <f:ajax event="keyup" render=":main-data-form" execute="@form"/> 
+                </h:inputText>
+            </h:form>
+        </ui:insert>
+        <div id="container">
+
+            <div id="box-left">
+                <ui:insert name="main-data">
+                    <h:form id="timeline-form">
+                        <h:dataTable id="tweets" class="main_table" value="#{kwetter.getTimeLineTweets(kwetter.loggedInUser)}" var="key" rendered="#{kwetter.showdata.equals('tweets')}">
+                            <h:column>
+                                <b><h:outputText value="#{kwetter.timelineTweets[key].name}" /></b>
+                                &nbsp;&nbsp;<h:outputText id="tweet-date" value="#{key.getDatum().toLocaleString()}" /><br />
+                                <h:outputText value="#{key.tweet}" />
+                            </h:column>
+                        </h:dataTable>
+                    </h:form>
+                    <h:form id="search-results">
+                        <h:dataTable id="results" class="main_table" value="#{kwetter.foundTweets}" var="found">
+                            <h:column>
+                                <h:outputText value="#{found.tweet}" />
+                            </h:column>
+                        </h:dataTable>
+                    </h:form>
+                </ui:insert>
+            </div>
+            <div id="box-right">
+                <div id="profile-title">
+                    <div id="profile-name"><ui:insert name="profile-name">Profile name</ui:insert></div>
+                    <div id="profile-details">
+                        <div id="profile-picture"><ui:insert name="profile-picture">Profile picture</ui:insert></div>
+                        <div id="profile-bio"><ui:insert name="profile-bio">Profile bio</ui:insert></div>
+                        <div id="profile-location"><ui:insert name="profile-location">Profile location</ui:insert></div>
+                    </div>
+                </div>
+                <div id="profile-stats">
+                    <ui:insert name="profile-stats">
+                        <h:form id="profile-details-form">
+                            <ul id="stats-nav">
+                                <li>
+                                    <div id="profile-following"> 
+                                        <h:commandLink action="#{kwetter.setShowdata('following')}" value="#{fn: length(kwetter.selectedUser.following)} Following" >
+                                            <f:ajax event="action" render=":main-data-form" execute="@form" />
+                                        </h:commandLink>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div id="profile-followers">
+                                        <h:commandLink action="#{kwetter.setShowdata('followers')}" value="#{fn:length(kwetter.selectedUser.followers)} Followers" >
+                                            <f:ajax event="action" render=":main-data-form" execute="@form" />
+                                        </h:commandLink>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div id="profile-tweets">
+                                        <h:commandLink action="#{kwetter.setShowdata('tweets')}" value="#{fn:length(kwetter.selectedUser.tweets)} Tweets">
+                                            <f:ajax event="action" render=":main-data-form" execute="@form" />
+                                        </h:commandLink>
+                                    </div>
+                                </li>
+                            </ul>
+                        </h:form>
+
+                    </ui:insert>
+                </div>
+                <div id="profile-followers">
+                    followers<br />
+                    <ui:insert name="profile-followers">
+                        <h:form id="profile-followers-table">
+
+                        </h:form>
+                    </ui:insert>
+                </div>
+            </div>
+        </div>
+    </h:body>
+
+</html>

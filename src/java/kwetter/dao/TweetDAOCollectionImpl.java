@@ -6,7 +6,9 @@
 package kwetter.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import kwetter.domain.Tweet;
 import kwetter.domain.User;
 
@@ -17,6 +19,7 @@ import kwetter.domain.User;
 public class TweetDAOCollectionImpl implements TweetDAO {
 
     private final List<Tweet> tweets;
+
 
     public TweetDAOCollectionImpl() {
         tweets = new ArrayList<>();
@@ -48,5 +51,6 @@ public class TweetDAOCollectionImpl implements TweetDAO {
     public void remove(Tweet t, User u) {
         u.removeTweet(t);
     }
+
 
 }

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class User implements Serializable {
 
@@ -17,6 +19,24 @@ public class User implements Serializable {
     private Collection<User> followers = new ArrayList();
     private Collection<Tweet> tweets = new ArrayList();
 
+    
+    private Tweet lastTweet;
+
+    public Map<Tweet, User> getTimeLine(){
+        Map<Tweet, User> _map = new HashMap<>();
+        for (User follower : followers) {
+            _map.put(follower.getLastTweet(), follower);
+        }
+        return _map;
+    }
+    
+    public Tweet getLastTweet() {
+        return lastTweet;
+    }
+
+    public void setLastTweet(Tweet lastTweet) {
+        this.lastTweet = lastTweet;
+    }
 
     public User() {
     }
@@ -51,7 +71,6 @@ public class User implements Serializable {
         return web;
     }
 
-
     public void setWeb(String web) {
         this.web = web;
     }
@@ -79,7 +98,9 @@ public class User implements Serializable {
     }
 
     public Boolean addTweet(Tweet tweet) {
+        this.lastTweet = tweet;
         return this.tweets.add(tweet);
+        
     }
 
     @Override

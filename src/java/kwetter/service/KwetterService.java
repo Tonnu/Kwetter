@@ -2,7 +2,10 @@ package kwetter.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import javax.ejb.Stateless;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -23,8 +26,19 @@ public class KwetterService {
 
     private String showdata = "tweets";
     private User selectedUser;
+    private User loggedInUser;
     private List<Tweet> foundTweets;
     private String searchQuery = "";
+
+    private Map<Tweet, User> timelineTweets;
+    
+    public User getLoggedInUser() {
+        return loggedInUser;
+    }
+
+    public void setLoggedInUser(User loggedInUser) {
+        this.loggedInUser = loggedInUser;
+    }
 
     public String getSearchQuery() {
         return searchQuery;
@@ -45,7 +59,8 @@ public class KwetterService {
     public KwetterService() {
         System.out.println("Launching KwetterService");
         initUsers();
-        foundTweets = new ArrayList<Tweet>();
+        foundTweets = new ArrayList<>();
+        timelineTweets = new HashMap<>();
     }
 
     public void create(User user) {
@@ -76,8 +91,8 @@ public class KwetterService {
                 System.out.println("Found tweet!\n" + t.getTweet());
             }
             this.foundTweets = tweetDAO.find(searchQuery);
-        }else{
-            this.showdata="tweets";
+        } else {
+            this.showdata = "tweets";
         }
     }
 
@@ -85,13 +100,29 @@ public class KwetterService {
         return foundTweets;
     }
 
-    public void setFoundTweets(List<Tweet> foundTweets) {
-        this.foundTweets = foundTweets;
+    public Tweet getLatestTweet(User u) {
+        return u.getLastTweet();
     }
 
-    public String displayProfile(String username) {
-        this.selectedUser = userDAO.findUsingUsername(username);
+    public List<String> getTimeLineTweets(User u) {
+        for (Map.Entry<Tweet, User> e : u.getTimeLine().entrySet()) {
+            System.out.println(e.getKey().getDatum().toString() + " " + e.getValue().getName());
+        }
+        this.timelineTweets = u.getTimeLine();
+        return new ArrayList(timelineTweets.keySet());
+    }
 
+    public Map<Tweet, User> getTimelineTweets() {
+        return timelineTweets;
+    }
+
+    public void setTimelineTweets(Map<Tweet, User> timelineTweets) {
+        this.timelineTweets = timelineTweets;
+    }
+
+    public String displayProfile(String username, String showdata) {
+        this.selectedUser = userDAO.findUsingUsername(username);
+        this.showdata = showdata;
         return String.format("testprofile?faces-redirect=true&amp;includeViewParams=true", username);
     }
 
@@ -128,8 +159,18 @@ public class KwetterService {
         tweetDAO.create(t1, u1);
         tweetDAO.create(t2, u1);
         tweetDAO.create(t3, u1);
+
         for (int i = 0; i < 50; i++) {
-            tweetDAO.create(new Tweet("Test!"), u1);
+            tweetDAO.create(new Tweet("TestH!", new Date(), "PC"), u1);
+        }
+        for (int i = 0; i < 50; i++) {
+            tweetDAO.create(new Tweet("TestT!", new Date(), "PC"), u3);
+        }
+        for (int i = 0; i < 50; i++) {
+            tweetDAO.create(new Tweet("TestF!", new Date(), "PC"), u2);
+        }
+        for (int i = 0; i < 50; i++) {
+            tweetDAO.create(new Tweet("TestS!", new Date(), "PC"), u4);
         }
 
         userDAO.create(u1);
@@ -137,6 +178,7 @@ public class KwetterService {
         userDAO.create(u3);
         userDAO.create(u4);
 
+        this.loggedInUser = u1;
         this.selectedUser = u1;
     }
 }

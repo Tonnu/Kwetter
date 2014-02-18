@@ -23,11 +23,11 @@
                         <li>Connect</li>
                         <li>Discover</li>
                     </ul>
-                    <h:form>
+                    <h:form id="search-form">
                         <h:inputText id="search" value="#{kwetter.searchQuery}">
                             <f:ajax event="keyup" render=":search-results" listener="#{kwetter.findTweetsContaining()}" execute="@form"/> 
                             <f:ajax event="keyup" render=":main-data-form" execute="@form"/> 
-                        </h:inputText>
+                            </h:inputText>
                     </h:form>
                 </div>
             </ui:define>
@@ -113,7 +113,7 @@
                 <h:form>
                     <h:dataTable id="profile-followers-table" value="#{kwetter.selectedUser.followers}" var="follower" >
                         <h:column>
-                            <h:commandLink action="#{kwetter.displayProfile(follower.name)}">
+                            <h:commandLink action="#{kwetter.displayProfile(follower.name, 'tweets')}">
                                 <f:ajax event="action" render="@this" execute="@this"/>
                                 <h:outputText id="follower" value="#{follower.name}" />
                             </h:commandLink>

@@ -47,7 +47,7 @@ body{
     margin-left:30px;
 }
 
-#main-navbar #search{
+#main-navbar #search-form{
     float:right;
     position:fixed;
     top:25px;
