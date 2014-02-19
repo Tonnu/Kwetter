@@ -9,11 +9,16 @@
             <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/web/ProfileViewTemplate.xhtml</file>
         </group>
         <group name="P11">
+            <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/web/login.xhtml</file>
+            <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/src/java/kwetter/dao/TweetDAOCollectionImpl.java</file>
+            <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/web/index.xhtml</file>
+            <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/src/java/kwetter/service/KwetterService.java</file>
             <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/web/testprofile.xhtml</file>
-            <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/web/resources/css/cssLayout.css</file>
-            <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/src/java/kwetter/domain/User.java</file>
+            <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/web/mainViewTemplate.xhtml</file>
             <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/src/java/kwetter/domain/Tweet.java</file>
-            <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/web/ProfileViewTemplate.xhtml</file>
+            <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/src/java/kwetter/domain/User.java</file>
+            <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/src/java/kwetter/domain/TimelineTweet.java</file>
+            <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/src/java/kwetter/dao/TweetDAO.java</file>
         </group>
     </open-files>
 </project-private>

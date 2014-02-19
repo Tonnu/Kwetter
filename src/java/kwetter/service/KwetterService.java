@@ -1,14 +1,11 @@
 package kwetter.service;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import javax.ejb.Stateless;
+import java.util.Random;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import kwetter.dao.TweetDAO;
 import kwetter.dao.TweetDAOCollectionImpl;
@@ -19,19 +16,54 @@ import kwetter.domain.User;
 
 @SessionScoped //has to be session scoped for now because of initusers()
 @ManagedBean(name = "kwetter")
-public class KwetterService {
+public class KwetterService implements Serializable{
 
     private final UserDAO userDAO = new UserDAOCollectionImpl();
     private final TweetDAO tweetDAO = new TweetDAOCollectionImpl();
 
     private String showdata = "tweets";
     private User selectedUser;
+
     private User loggedInUser;
     private List<Tweet> foundTweets;
     private String searchQuery = "";
+    private String newTweet = "";
+    private String loginUserName= "";
 
-    private Map<Tweet, User> timelineTweets;
+    public String getLoginUserName() {
+        return loginUserName;
+    }
+
+    public void setLoginUserName(String loginUserName) {
+        this.loginUserName = loginUserName;
+    }
     
+
+    public Date getCurrentDate() {
+        return new Date();
+    }
+
+    private List<Tweet> tlTweets;
+    private List<User> loginUsers;
+    private static Random r = new Random();
+
+    public List<Tweet> getTlTweets() {
+        return tlTweets;
+    }
+
+    public List<Tweet> getTimelineForUser(User u) {
+        this.tlTweets = (List<Tweet>) tweetDAO.getTimelineForUser(u);
+        return this.tlTweets;
+    }
+
+    public String getNewTweet() {
+        return newTweet;
+    }
+
+    public void setNewTweet(String newTweet) {
+        this.newTweet = newTweet;
+    }
+
     public User getLoggedInUser() {
         return loggedInUser;
     }
@@ -58,13 +90,27 @@ public class KwetterService {
 
     public KwetterService() {
         System.out.println("Launching KwetterService");
-        initUsers();
         foundTweets = new ArrayList<>();
-        timelineTweets = new HashMap<>();
+        this.tlTweets = new ArrayList<>();
+        loginUsers = new ArrayList<>();
+        initUsers();
+
     }
 
     public void create(User user) {
         userDAO.create(user);
+    }
+
+    public void submitNewTweet(User submitter, String tweet) {
+        System.out.println("Submitting new tweet: " + tweet);
+        Tweet _newtweet = new Tweet(tweet, new Date(), "PC", submitter.getName());
+        tweetDAO.create(_newtweet, submitter);
+        tweetDAO.checkForMentions(this.userDAO.findAll(), _newtweet);
+        this.newTweet = "";
+    }
+
+    public List<String> getLatestTrends() {
+        return tweetDAO.generateTrends();
     }
 
     public void edit(User user) {
@@ -81,6 +127,10 @@ public class KwetterService {
 
     public User find(Object id) {
         return userDAO.find((Long) id);
+    }
+
+    public List<Tweet> getMentionsForUser(User u) {
+        return u.getMentions();
     }
 
     public void findTweetsContaining() {
@@ -102,22 +152,6 @@ public class KwetterService {
 
     public Tweet getLatestTweet(User u) {
         return u.getLastTweet();
-    }
-
-    public List<String> getTimeLineTweets(User u) {
-        for (Map.Entry<Tweet, User> e : u.getTimeLine().entrySet()) {
-            System.out.println(e.getKey().getDatum().toString() + " " + e.getValue().getName());
-        }
-        this.timelineTweets = u.getTimeLine();
-        return new ArrayList(timelineTweets.keySet());
-    }
-
-    public Map<Tweet, User> getTimelineTweets() {
-        return timelineTweets;
-    }
-
-    public void setTimelineTweets(Map<Tweet, User> timelineTweets) {
-        this.timelineTweets = timelineTweets;
     }
 
     public String displayProfile(String username, String showdata) {
@@ -143,6 +177,7 @@ public class KwetterService {
         User u2 = new User("Frank", "httpF", "geboren 2");
         User u3 = new User("Tom", "httpT", "geboren 3");
         User u4 = new User("Sjaak", "httpS", "geboren 4");
+
         u1.addFollowing(u2);
         u1.addFollowing(u3);
         u1.addFollowing(u4);
@@ -150,35 +185,48 @@ public class KwetterService {
         u1.addFollower(u4);
         u1.addFollower(u3);
         u1.addFollower(u2);
-        u1.addFollower(u1);
 
-        Tweet t1 = new Tweet("Hallo", new Date(), "PC");
-        Tweet t2 = new Tweet("Hallo again", new Date(), "PC");
-        Tweet t3 = new Tweet("Hallo where are you", new Date(), "PC");
+        Tweet t1 = new Tweet("Hallo", new Date(), "PC", u1.getName());
+        Tweet t2 = new Tweet("Hallo again", new Date(), "PC", u1.getName());
+        Tweet t3 = new Tweet("Hallo where are you", new Date(), "PC", u1.getName());
 
         tweetDAO.create(t1, u1);
         tweetDAO.create(t2, u1);
         tweetDAO.create(t3, u1);
 
-        for (int i = 0; i < 50; i++) {
-            tweetDAO.create(new Tweet("TestH!", new Date(), "PC"), u1);
-        }
-        for (int i = 0; i < 50; i++) {
-            tweetDAO.create(new Tweet("TestT!", new Date(), "PC"), u3);
-        }
-        for (int i = 0; i < 50; i++) {
-            tweetDAO.create(new Tweet("TestF!", new Date(), "PC"), u2);
-        }
-        for (int i = 0; i < 50; i++) {
-            tweetDAO.create(new Tweet("TestS!", new Date(), "PC"), u4);
-        }
-
+//        for (int i = 0; i < 10; i++) {
+//            tweetDAO.create(new Tweet("TestD!", new Date(114, 2, 1 + r.nextInt(30)), "PC", u1.getName()), u1);
+//        }
+//        for (int i = 0; i < 10; i++) {
+//            tweetDAO.create(new Tweet("TestC!", new Date(114, 2, 1 + r.nextInt(30)), "PC", u2.getName()), u2);
+//
+//        }
+//        for (int i = 0; i < 10; i++) {
+//            tweetDAO.create(new Tweet("TestB!", new Date(114, 2, 1 + r.nextInt(30)), "PC", u3.getName()), u3);
+//
+//        }
+//        for (int i = 0; i < 10; i++) {
+//            tweetDAO.create(new Tweet("TestA!", new Date(114, 2, 1 + r.nextInt(30)), "PC", u4.getName()), u4);
+//
+//        }
         userDAO.create(u1);
         userDAO.create(u2);
         userDAO.create(u3);
         userDAO.create(u4);
 
-        this.loggedInUser = u1;
-        this.selectedUser = u1;
+        
+        this.loginUsers = userDAO.findAll();
+        this.tlTweets.addAll(u1.getTweets());
+
+    }
+
+    public String login() {
+        this.loggedInUser = userDAO.findUsingUsername(this.loginUserName);
+        this.selectedUser = userDAO.findUsingUsername(this.loginUserName);
+        return "index?faces-redirect=true&amp;includeViewParams=true";
+    }
+
+    public List<User> getLoginUsers() {
+        return loginUsers;
     }
 }

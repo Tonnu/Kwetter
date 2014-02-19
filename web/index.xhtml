@@ -5,7 +5,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:fn="http://java.sun.com/jsp/jstl/functions"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <h:head>
         <f:metadata>
@@ -23,7 +24,7 @@
             <ui:define name="main-navbar">
                 <div id="main-navbar">
                     <ul>
-                        <li>Home</li>
+                        <li><a href="/Kwetter">Home</a></li>
                         <li>Me</li>
                         <li>Connect</li>
                         <li>Discover</li>
@@ -76,6 +77,12 @@
                             </div>
                         </li>
                     </ul>
+                    <div id="trending">
+                        <b>Trending</b>
+                        <c:forEach items="${kwetter.latestTrends}" var="item">
+                            <br />#{item}
+                        </c:forEach>
+                    </div>
                 </h:form>            
             </ui:define>
 

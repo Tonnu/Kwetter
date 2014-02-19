@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package kwetter.dao;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import kwetter.domain.Tweet;
@@ -16,12 +16,18 @@ import kwetter.domain.User;
  * @author Toon
  */
 public interface TweetDAO {
-        List<Tweet> find(String query);
-        
-        List<Tweet> findAll();
-        
-        void create(Tweet t, User u);
-        
-        void remove(Tweet t, User u);
-        
+
+    List<Tweet> find(String query);
+
+    List<Tweet> findAll();
+
+    void create(Tweet t, User u);
+
+    void remove(Tweet t, User u);
+
+    public Collection<Tweet> getTimelineForUser(User u);
+    
+    public void checkForMentions(List<User> users, Tweet t);
+    
+    public List<String> generateTrends();
 }

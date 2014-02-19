@@ -3,9 +3,14 @@ package kwetter.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Tweet implements Serializable{
+public class Tweet implements Serializable, Comparable<Tweet>{
     private static final long serialVersionUID = 1L;
     private String tweet;
+    private String sender;
+
+    public String getSender() {
+        return sender;
+    }
     private Date postDate;
     private String postedFrom;
 
@@ -17,10 +22,11 @@ public class Tweet implements Serializable{
         
     }
 
-    public Tweet(String tweet, Date datum, String vanaf) {
+    public Tweet(String tweet, Date datum, String vanaf, String sender) {
         this.tweet = tweet;
         this.postDate = datum;
         this.postedFrom = vanaf;
+        this.sender = sender;
     }
 
     public String getTweet() {
@@ -68,6 +74,11 @@ public class Tweet implements Serializable{
     public String toString() {
         //return "twitter.domain.Tweet[id=" + postDate.toString() + "]";
         return "tostring()";
+    }
+
+    @Override
+    public int compareTo(Tweet t) {
+        return this.postDate.compareTo(t.getDatum());
     }
 
 }

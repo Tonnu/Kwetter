@@ -1,9 +1,9 @@
 package kwetter.dao;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import kwetter.domain.User;
+
 
 public class UserDAOCollectionImpl implements UserDAO {
 

@@ -18,7 +18,7 @@
             <ui:define name="main-navbar">
                 <div id="main-navbar">
                     <ul>
-                        <li>Home</li>
+                        <li><a href="/Kwetter">Home</a></li>
                         <li>Me</li>
                         <li>Connect</li>
                         <li>Discover</li>
@@ -27,7 +27,7 @@
                         <h:inputText id="search" value="#{kwetter.searchQuery}">
                             <f:ajax event="keyup" render=":search-results" listener="#{kwetter.findTweetsContaining()}" execute="@form"/> 
                             <f:ajax event="keyup" render=":main-data-form" execute="@form"/> 
-                            </h:inputText>
+                        </h:inputText>
                     </h:form>
                 </div>
             </ui:define>
@@ -75,6 +75,8 @@
                     <h:form id="search-results">
                         <h:dataTable id="results" class="main_table" value="#{kwetter.foundTweets}" var="found">
                             <h:column>
+                                <b><h:outputText value="#{found.sender}" /></b>
+                                &nbsp;&nbsp;<h:outputText value="#{found.datum.toString()}" /><br />
                                 <h:outputText value="#{found.tweet}" />
                             </h:column>
                         </h:dataTable>

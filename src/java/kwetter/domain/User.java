@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class User implements Serializable {
@@ -14,22 +16,38 @@ public class User implements Serializable {
     private String name;
     private String web;
     private String bio;
-
+    
     private Collection<User> following = new ArrayList();
     private Collection<User> followers = new ArrayList();
     private Collection<Tweet> tweets = new ArrayList();
+    private Collection<Tweet> mentions = new ArrayList();
 
-    
     private Tweet lastTweet;
+//
+//    public List<Tweet> getTlTweets() {
+//        ArrayList<Tweet> _tweets = new ArrayList<>();
+//        for(User u: followers){
+//            this.getTweets().addAll(u.getTlTweets());
+//        }
+//        return _tweets;
+//    }
+//    private List<TimelineTweet> tlTweets;
+//
+//    public Map<User, List<Tweet>> getTimeLine() {
+//        Map<User, List<Tweet>> _map = new HashMap<>();
+//        for (User follower : followers) {
+//            _map.put(follower, (List<Tweet>) follower.getTweets());
+//        }
+//        return _map;
+//    }
 
-    public Map<Tweet, User> getTimeLine(){
-        Map<Tweet, User> _map = new HashMap<>();
-        for (User follower : followers) {
-            _map.put(follower.getLastTweet(), follower);
-        }
-        return _map;
+    public List<Tweet> getMentions() {
+        return (List<Tweet>) this.mentions;
     }
-    
+
+    public void addMention(Tweet t){
+        this.mentions.add(t);
+    }
     public Tweet getLastTweet() {
         return lastTweet;
     }
@@ -85,6 +103,7 @@ public class User implements Serializable {
     }
 
     public Collection<Tweet> getTweets() {
+        Collections.sort((List<Tweet>) tweets, Collections.reverseOrder());
         return Collections.unmodifiableCollection(tweets);
     }
 
@@ -100,7 +119,7 @@ public class User implements Serializable {
     public Boolean addTweet(Tweet tweet) {
         this.lastTweet = tweet;
         return this.tweets.add(tweet);
-        
+
     }
 
     @Override
