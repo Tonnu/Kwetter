@@ -5,6 +5,7 @@
  */
 package kwetter.dao;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,7 +22,7 @@ import kwetter.domain.User;
  *
  * @author Toon
  */
-public class TweetDAOCollectionImpl implements TweetDAO {
+public class TweetDAOCollectionImpl implements TweetDAO, Serializable {
 
     private final List<Tweet> tweets;
     private List<String> hashtags;
@@ -29,7 +30,7 @@ public class TweetDAOCollectionImpl implements TweetDAO {
     ValueComparator bvc;
     private TreeMap<String, Integer> sorted_counter;
     private TreeSet<Tweet> sorted_tweets;
-
+    
     public TweetDAOCollectionImpl() {
         tweets = new ArrayList<>();
         counter = new HashMap<>(5000);
