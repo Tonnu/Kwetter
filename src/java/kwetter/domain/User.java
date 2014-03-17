@@ -108,7 +108,8 @@ public class User implements Serializable {
     public boolean unFollow(User other) {
         if (isFollowing(other)) {
             other.followers.remove(this);
-            return this.following.remove(other);
+            this.following.remove(other);
+            return true;
         }
         return false;
     }

@@ -65,8 +65,8 @@ public class TweetDAOCollectionImpl implements TweetDAO, Serializable {
     @Override
     public Collection<Tweet> getTimelineForUser(User u) {
         ArrayList<Tweet> _tweets = new ArrayList<>();
-        for (User follower : u.getFollowers()) {
-            _tweets.addAll(follower.getTweets());
+        for (User following : u.getFollowing()) {
+            _tweets.addAll(following.getTweets());
             System.out.println("timeline tweet from " + u.getName());
         }
         _tweets.addAll(u.getTweets());
