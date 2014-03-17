@@ -17,12 +17,14 @@
         <ui:composition template="./ProfileViewTemplate.xhtml">
             <ui:define name="main-navbar">
                 <div id="main-navbar">
-                    <ul>
-                        <li><a href="/Kwetter">Home</a></li>
-                        <li>Me</li>
-                        <li>Connect</li>
-                        <li>Discover</li>
-                    </ul>
+                    <h:form>    
+                        <ul>
+                            <li><a href="/Kwetter">Home</a></li>
+                            <li> <h:commandLink action="#{kwetter.displayProfile(kwetter.loggedInUser.name, 'tweets')}" value="Me" /></li>
+                            <li>Connect</li>
+                            <li>Discover</li>
+                        </ul>
+                    </h:form>
                     <h:form id="search-form">
                         <h:inputText id="search" value="#{kwetter.searchQuery}">
                             <f:ajax event="keyup" render=":search-results" listener="#{kwetter.findTweetsContaining()}" execute="@form"/> 
@@ -62,12 +64,12 @@
                         </h:dataTable>
                         <h:dataTable id="followers" class="main_table" value="#{kwetter.selectedUser.followers}" var="follower" rendered="#{kwetter.showdata.equals('followers')}">
                             <h:column>
-                                <h:outputText value="#{follower.name}" />
+                                <h:commandLink action="#{kwetter.displayProfile(follower.name, 'tweets')}" value="#{follower.name}" />
                             </h:column>
                         </h:dataTable>
                         <h:dataTable id="following" class="main_table" value="#{kwetter.selectedUser.following}" var="following" rendered="#{kwetter.showdata.equals('following')}">
                             <h:column>
-                                <h:outputText value="#{following.name}" />
+                                <h:commandLink action="#{kwetter.displayProfile(following.name, 'tweets')}" value="#{following.name}" />
                             </h:column>
                         </h:dataTable>
 
@@ -88,11 +90,19 @@
                 <h:form>
                     <ul id="stats-nav">
                         <li>
+                            <div id="followButton">
+                                <h:commandButton value="Follow" action="#{kwetter.addFollower(kwetter.selectedUser)}" rendered="#{!kwetter.loggedInUser.isFollowing(kwetter.selectedUser)}">
+                                </h:commandButton>
+                                <h:commandButton value="Unfollow" action="#{kwetter.stopFollowing(kwetter.selectedUser)}" rendered="#{kwetter.loggedInUser.isFollowing(kwetter.selectedUser)}">
+                                </h:commandButton>
+                            </div>
+
                             <div id="profile-following"> 
                                 <h:commandLink action="#{kwetter.setShowdata('following')}" value="#{fn: length(kwetter.selectedUser.following)} Following" >
                                     <f:ajax event="action" render=":main-data-form" execute="@form" />
                                 </h:commandLink>
                             </div>
+
                         </li>
                         <li>
                             <div id="profile-followers">

@@ -16,38 +16,22 @@ public class User implements Serializable {
     private String name;
     private String web;
     private String bio;
-    
+
     private Collection<User> following = new ArrayList();
     private Collection<User> followers = new ArrayList();
     private Collection<Tweet> tweets = new ArrayList();
     private Collection<Tweet> mentions = new ArrayList();
 
     private Tweet lastTweet;
-//
-//    public List<Tweet> getTlTweets() {
-//        ArrayList<Tweet> _tweets = new ArrayList<>();
-//        for(User u: followers){
-//            this.getTweets().addAll(u.getTlTweets());
-//        }
-//        return _tweets;
-//    }
-//    private List<TimelineTweet> tlTweets;
-//
-//    public Map<User, List<Tweet>> getTimeLine() {
-//        Map<User, List<Tweet>> _map = new HashMap<>();
-//        for (User follower : followers) {
-//            _map.put(follower, (List<Tweet>) follower.getTweets());
-//        }
-//        return _map;
-//    }
 
     public List<Tweet> getMentions() {
         return (List<Tweet>) this.mentions;
     }
 
-    public void addMention(Tweet t){
+    public void addMention(Tweet t) {
         this.mentions.add(t);
     }
+
     public Tweet getLastTweet() {
         return lastTweet;
     }
@@ -112,8 +96,30 @@ public class User implements Serializable {
     }
 
     public Boolean addFollowing(User following) {
-        following.addFollower(this); //add new follower to the other user;
-        return this.following.add(following);
+        if (isFollowing(following)) {
+            return false;
+        } else {
+            following.addFollower(this); //add new follower to the other user;    
+            this.following.add(following);
+            return true;
+        }
+    }
+
+    public boolean unFollow(User other) {
+        if (isFollowing(other)) {
+            other.followers.remove(this);
+            return this.following.remove(other);
+        }
+        return false;
+    }
+
+    public boolean isFollowing(User other) {
+        for (User user : following) {
+            if (other.equals(user)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Boolean addTweet(Tweet tweet) {

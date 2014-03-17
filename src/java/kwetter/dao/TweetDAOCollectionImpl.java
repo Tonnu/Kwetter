@@ -15,7 +15,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Produces;
+import javax.inject.Named;
 import kwetter.domain.Tweet;
+import kwetter.domain.TweetEvent;
+import kwetter.domain.TweetEvent.Options;
 import kwetter.domain.User;
 
 /**
@@ -30,7 +36,7 @@ public class TweetDAOCollectionImpl implements TweetDAO, Serializable {
     ValueComparator bvc;
     private TreeMap<String, Integer> sorted_counter;
     private TreeSet<Tweet> sorted_tweets;
-    
+
     public TweetDAOCollectionImpl() {
         tweets = new ArrayList<>();
         counter = new HashMap<>(5000);
@@ -61,18 +67,24 @@ public class TweetDAOCollectionImpl implements TweetDAO, Serializable {
         ArrayList<Tweet> _tweets = new ArrayList<>();
         for (User follower : u.getFollowers()) {
             _tweets.addAll(follower.getTweets());
+            System.out.println("timeline tweet from " + u.getName());
         }
         _tweets.addAll(u.getTweets());
-        Collections.sort(tweets, Collections.reverseOrder());
-        return tweets;
+        for (Tweet tweet : u.getTweets()) {
+            System.out.println("found tweet for user: " + u.getName() + "\n" + tweet.getTweet());
+        }
+        Collections.sort(_tweets, Collections.reverseOrder());
+        return _tweets;
     }
 
     @Override
-    public void create(Tweet t, User u) {
-        u.addTweet(t);
-        tweets.add(t);
+    public void create(@Observes TweetEvent event) {
+        if (event.getType() == Options.NEW_TWEET) {
+            event.getTweeter().addTweet(event.getTweet());
+            tweets.add(event.getTweet());
 
-        checkForHashtags(t);
+            checkForHashtags(event.getTweet());
+        }
     }
 
     private void checkForHashtags(Tweet t) {

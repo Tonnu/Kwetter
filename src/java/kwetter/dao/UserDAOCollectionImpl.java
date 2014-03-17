@@ -52,4 +52,5 @@ public class UserDAOCollectionImpl implements UserDAO, Serializable {
     public User find(Long id) {
         return users.get(id.intValue());
     }
+    
 }

@@ -7,8 +7,9 @@ package kwetter.dao;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+import javax.enterprise.event.Observes;
 import kwetter.domain.Tweet;
+import kwetter.domain.TweetEvent;
 import kwetter.domain.User;
 
 /**
@@ -21,7 +22,7 @@ public interface TweetDAO {
 
     List<Tweet> findAll();
 
-    void create(Tweet t, User u);
+    void create(@Observes TweetEvent event);
 
     void remove(Tweet t, User u);
 

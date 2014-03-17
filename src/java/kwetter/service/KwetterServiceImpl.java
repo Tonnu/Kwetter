@@ -1,5 +1,7 @@
 package kwetter.service;
 
+import com.google.common.eventbus.Subscribe;
+import com.oracle.jrockit.jfr.EventDefinition;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,23 +9,26 @@ import java.util.List;
 import java.util.Random;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.event.Event;
+import javax.enterprise.event.Observes;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import kwetter.dao.TweetDAO;
-import kwetter.dao.TweetDAOCollectionImpl;
 import kwetter.dao.UserDAO;
-import kwetter.dao.UserDaoQualifier;
 import kwetter.domain.Tweet;
+import kwetter.domain.TweetEvent;
+import kwetter.domain.TweetEvent.Options;
 import kwetter.domain.User;
+import kwetter.domain.UserEvent;
 
 @Named("kwetter")
 @SessionScoped //has to be session scoped for now because of initusers(
-public class KwetterServiceImpl implements Serializable, KwetterService{
-    
+public class KwetterServiceImpl implements Serializable, KwetterService {
+
     @Inject
     private UserDAO userDAO;
-    
+
     @Inject
     private TweetDAO tweetDAO;
 
@@ -34,7 +39,13 @@ public class KwetterServiceImpl implements Serializable, KwetterService{
     private List<Tweet> foundTweets;
     private String searchQuery = "";
     private String newTweet = "";
-    private String loginUserName= "";
+    private String loginUserName = "";
+
+    @Inject
+    private Event<UserEvent> userEvents;
+
+    @Inject
+    private Event<TweetEvent> tweetEvents;
 
     @Override
     public String getLoginUserName() {
@@ -45,7 +56,7 @@ public class KwetterServiceImpl implements Serializable, KwetterService{
     public void setLoginUserName(String loginUserName) {
         this.loginUserName = loginUserName;
     }
-    
+
     @Override
     public Date getCurrentDate() {
         return new Date();
@@ -62,6 +73,7 @@ public class KwetterServiceImpl implements Serializable, KwetterService{
 
     @Override
     public List<Tweet> getTimelineForUser(User u) {
+        System.out.println("getting timeline for user: " + u.getName());
         this.tlTweets = (List<Tweet>) tweetDAO.getTimelineForUser(u);
         return this.tlTweets;
     }
@@ -105,7 +117,7 @@ public class KwetterServiceImpl implements Serializable, KwetterService{
     public void setShowdata(String showdata) {
         this.showdata = showdata;
     }
-    
+
     @PostConstruct
     private void initKwetterServiceImpl() {
         System.out.println("--- Launching KwetterService");
@@ -116,16 +128,27 @@ public class KwetterServiceImpl implements Serializable, KwetterService{
     }
 
     @Override
+    public void stopFollowing(User toUnFollow) {
+        UserEvent ue = new UserEvent(toUnFollow, UserEvent.userOptions.STOP_FOLLOW);
+        userEvents.fire(ue);
+    }
+
+    @Override
+    public void addFollower(User toFollow) {
+        UserEvent ue = new UserEvent(toFollow, UserEvent.userOptions.NEW_FOLLOW);
+        userEvents.fire(ue);
+    }
+
+    @Override
     public void create(User user) {
         userDAO.create(user);
     }
 
     @Override
     public void submitNewTweet(User submitter, String tweet) {
-        System.out.println("Submitting new tweet: " + tweet);
-        Tweet _newtweet = new Tweet(tweet, new Date(), "PC", submitter.getName());
-        tweetDAO.create(_newtweet, submitter);
-        tweetDAO.checkForMentions(this.userDAO.findAll(), _newtweet);
+        TweetEvent event = new TweetEvent(new Tweet(tweet, new Date(), "PC", submitter.getName()), submitter, Options.NEW_TWEET);
+        tweetEvents.fire(event);
+        tweetDAO.checkForMentions(this.userDAO.findAll(), event.getTweet());
         this.newTweet = "";
     }
 
@@ -215,34 +238,22 @@ public class KwetterServiceImpl implements Serializable, KwetterService{
         u1.addFollowing(u3);
         u1.addFollowing(u4);
 
-        u1.addFollower(u4);
-        u1.addFollower(u3);
-        u1.addFollower(u2);
+        u4.addFollowing(u1);
+        u3.addFollowing(u1);
+        u2.addFollowing(u1);
 
         Tweet t1 = new Tweet("Hallo", new Date(), "PC", u1.getName());
         Tweet t2 = new Tweet("Hallo again", new Date(), "PC", u1.getName());
         Tweet t3 = new Tweet("Hallo where are you", new Date(), "PC", u1.getName());
 
-        tweetDAO.create(t1, u1);
-        tweetDAO.create(t2, u1);
-        tweetDAO.create(t3, u1);
+        TweetEvent te = new TweetEvent(t1, u1, Options.NEW_TWEET);
+        TweetEvent te1 = new TweetEvent(t2, u1, Options.NEW_TWEET);
+        TweetEvent te2 = new TweetEvent(t3, u1, Options.NEW_TWEET);
 
-//        for (int i = 0; i < 10; i++) {
-//            tweetDAO.create(new Tweet("TestD!", new Date(114, 2, 1 + r.nextInt(30)), "PC", u1.getName()), u1);
-//        }
-//        for (int i = 0; i < 10; i++) {
-//            tweetDAO.create(new Tweet("TestC!", new Date(114, 2, 1 + r.nextInt(30)), "PC", u2.getName()), u2);
-//
-//        }
-//        for (int i = 0; i < 10; i++) {
-//            tweetDAO.create(new Tweet("TestB!", new Date(114, 2, 1 + r.nextInt(30)), "PC", u3.getName()), u3);
-//
-//        }
-//        for (int i = 0; i < 10; i++) {
-//            tweetDAO.create(new Tweet("TestA!", new Date(114, 2, 1 + r.nextInt(30)), "PC", u4.getName()), u4);
-//
-//        }
-        
+        tweetEvents.fire(te);
+        tweetEvents.fire(te1);
+        tweetEvents.fire(te2);
+
         userDAO.create(u1);
         userDAO.create(u2);
         userDAO.create(u3);
@@ -255,14 +266,44 @@ public class KwetterServiceImpl implements Serializable, KwetterService{
     }
 
     @Override
+    @Subscribe
     public String login() {
-        this.loggedInUser = userDAO.findUsingUsername(this.loginUserName);
-        this.selectedUser = userDAO.findUsingUsername(this.loginUserName);
+        UserEvent e = new UserEvent(userDAO.findUsingUsername(this.loginUserName), UserEvent.userOptions.LOGIN);
+        userEvents.fire(e);
         return "index?faces-redirect=true&amp;includeViewParams=true";
     }
 
     @Override
     public List<User> getLoginUsers() {
         return loginUsers;
+    }
+
+    public void onUserEvent(@Observes UserEvent event) {
+        System.out.println("UserEvent got fired");
+        switch (event.getType()) {
+            case LOGIN:
+                System.out.println("New login event");
+                this.loggedInUser = event.getU();
+                this.selectedUser = event.getU();
+                tweetDAO.getTimelineForUser(this.loggedInUser);
+                break;
+            case LOGOUT:
+                System.out.println("New logout event");
+                this.loggedInUser = null;
+                break;
+            case NEW_FOLLOW:
+                System.out.println("Now following " + event.getU().getName());
+                this.loggedInUser.addFollowing(event.getU());
+                tweetDAO.getTimelineForUser(this.loggedInUser);
+                break;
+            case STOP_FOLLOW:
+                System.out.println("Stopped following " + event.getU().getName());
+                this.loggedInUser.unFollow(event.getU());
+                tweetDAO.getTimelineForUser(this.loggedInUser);
+                break;
+            default:
+                System.out.println("Could not find event type  " + event.getType().toString());
+                break;
+        }
     }
 }

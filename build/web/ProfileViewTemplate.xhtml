@@ -16,8 +16,16 @@
     <h:body>
         <ui:insert name="main-navbar">
             <ul>
-                <li>Home</li>
-                <li>Me</li>
+                <li><a href="/">Home</a></li>
+                <h:form>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li> <h:commandLink action="#{kwetter.displayProfile(kwetter.loggedInUser.name, 'tweets')}" value="Me">
+                            </h:commandLink> </li>
+                        <li>Connect</li>
+                        <li>Discover</li>
+                    </ul>
+                </h:form>
                 <li>Connect</li>
                 <li>Discover</li>
             </ul>
@@ -41,10 +49,10 @@
             <div id="box-left">
                 <ui:insert name="main-data">
                     <h:form id="timeline-form">
-                        
+
                     </h:form>
                     <h:form id="search-results">
-                        
+
                     </h:form>
                 </ui:insert>
             </div>
@@ -52,16 +60,16 @@
                 <div id="profile-stats">
                     <ui:insert name="profile-stats">
                         <h:form id="profile-details-form">
-                            
+
                         </h:form>
-                        
+
                     </ui:insert>
                 </div>
                 <div id="profile-followers">
                     followers<br />
                     <ui:insert name="profile-followers">
                         <h:form id="profile-followers-table">
-                            
+
                         </h:form>
                     </ui:insert>
                 </div>

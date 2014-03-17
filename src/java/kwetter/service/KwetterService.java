@@ -77,4 +77,7 @@ public interface KwetterService {
 
     void submitNewTweet(User submitter, String tweet);
     
+    void addFollower(User toFollow);
+    
+    void stopFollowing(User toUnFollow);
 }

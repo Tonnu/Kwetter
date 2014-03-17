@@ -20,12 +20,15 @@
     </h:head>
     <h:body>
         <ui:insert name="main-navbar">
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li>Me</li>
-                <li>Connect</li>
-                <li>Discover</li>
-            </ul>
+            <h:form>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li> <h:commandLink action="#{kwetter.displayProfile(kwetter.loggedInUser.name, 'tweets')}" value="Me">
+                        </h:commandLink> </li>
+                    <li>Connect</li>
+                    <li>Discover</li>
+                </ul>
+            </h:form>
             <h:form id="search-form">
                 <h:inputText id="search" value="#{kwetter.searchQuery}">
                     <f:ajax event="keyup" render=":search-results" listener="#{kwetter.findTweetsContaining()}" execute="@form"/> 
@@ -44,9 +47,9 @@
                                 <h:dataTable id="tweets" var="tltweet" class='main_table' value="#{kwetter.getTimelineForUser(kwetter.loggedInUser)}" rendered="#{kwetter.showdata.equals('tweets')}">
                                     <h:column>
                                         <b><h:outputText value="#{tltweet.sender}" /></b>
-                                        &nbsp;&nbsp;<h:outputText value="#{tltweet.datum.toLocaleString()}" /><br />
-                                        <h:outputText value="Just now" rendered="#{ kwetter.getCurrentDate().getMinutes() - tltweet.datum.getMinutes() gt 1}" />
-                                                      
+                                        &nbsp;&nbsp;<h:outputText value="#{tltweet.datum.toLocaleString()}" />
+                                        <h:outputText value="(Just now)" rendered="#{ kwetter.getCurrentDate().getMinutes() - tltweet.datum.getMinutes() gt 1}" /><br />
+
                                         <h:outputText value="#{tltweet.tweet}" />
                                     </h:column>
                                 </h:dataTable>
@@ -84,10 +87,15 @@
                 </div>
                 <div id="compose-tweet">
                     <h:form>
-                        <h:inputTextarea value="#{kwetter.newTweet}" id="input-tweet"/>
-                        <h:commandButton value="Tweet!" action="#{kwetter.submitNewTweet(kwetter.loggedInUser, kwetter.newTweet)}">
-                            <f:ajax event="action" render=":timeline-form" execute="@form" />
-                        </h:commandButton>
+                        <div>
+
+                        </div>
+                        <div>
+                            <h:inputTextarea value="#{kwetter.newTweet}" id="input-tweet"/><br />
+                            <h:commandButton value="Tweet!" action="#{kwetter.submitNewTweet(kwetter.loggedInUser, kwetter.newTweet)}">
+                                <f:ajax event="action" render=":timeline-form" execute="@form" />
+                            </h:commandButton>
+                        </div>
                     </h:form>
                 </div>
                 <div id="profile-stats">
