@@ -1,5 +1,7 @@
 package kwetter.service;
 
+import Interceptors.CheckWords;
+import Interceptors.TweetInterceptor;
 import com.google.common.eventbus.Subscribe;
 import com.oracle.jrockit.jfr.EventDefinition;
 import java.io.Serializable;
@@ -14,6 +16,7 @@ import javax.enterprise.event.Observes;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.interceptor.Interceptors;
 import kwetter.dao.TweetDAO;
 import kwetter.dao.UserDAO;
 import kwetter.domain.Tweet;
@@ -145,8 +148,10 @@ public class KwetterServiceImpl implements Serializable, KwetterService {
     }
 
     @Override
+    @Interceptors(TweetInterceptor.class)
     public void submitNewTweet(User submitter, String tweet) {
-        TweetEvent event = new TweetEvent(new Tweet(tweet, new Date(), "PC", submitter.getName()), submitter, Options.NEW_TWEET);
+        Tweet t = new Tweet(tweet, new Date(), "PC", submitter.getName());
+        TweetEvent event = new TweetEvent(t, submitter, Options.NEW_TWEET);
         tweetEvents.fire(event);
         tweetDAO.checkForMentions(this.userDAO.findAll(), event.getTweet());
         this.newTweet = "";
