@@ -2,11 +2,20 @@ package kwetter.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
-public class Tweet implements Serializable, Comparable<Tweet>{
+@Entity
+public class Tweet implements Serializable, Comparable<Tweet> {
+
     private static final long serialVersionUID = 1L;
     private String tweet;
     private String sender;
+    
+    @Id
+    @GeneratedValue
+    private Long id;
 
     public String getSender() {
         return sender;
@@ -19,7 +28,7 @@ public class Tweet implements Serializable, Comparable<Tweet>{
 
     public Tweet(String tweet) {
         this.tweet = tweet;
-        
+
     }
 
     public Tweet(String tweet, Date datum, String vanaf, String sender) {
@@ -53,11 +62,10 @@ public class Tweet implements Serializable, Comparable<Tweet>{
         this.postedFrom = vanaf;
     }
 
-
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (tweet != null ? tweet.hashCode()+ postDate.hashCode() : 0);
+        hash += (tweet != null ? tweet.hashCode() + postDate.hashCode() : 0);
         return hash;
     }
 
@@ -79,6 +87,14 @@ public class Tweet implements Serializable, Comparable<Tweet>{
     @Override
     public int compareTo(Tweet t) {
         return this.postDate.compareTo(t.getDatum());
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }

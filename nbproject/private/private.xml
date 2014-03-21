@@ -21,11 +21,9 @@
         </group>
         <group name="P11">
             <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/src/java/kwetter/dao/TweetDAOCollectionImpl.java</file>
-            <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/src/java/kwetter/service/KwetterService.java</file>
-            <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/web/mainViewTemplate.xhtml</file>
+            <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/src/java/kwetter/dao/UserDAOJPA.java</file>
+            <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/src/java/kwetter/domain/Tweet.java</file>
             <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/src/java/kwetter/domain/User.java</file>
-            <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/src/java/kwetter/dao/UserDAOCollectionImpl.java</file>
-            <file>file:/C:/Users/Toon/Documents/NetBeansProjects/Kwetter/src/java/kwetter/service/KwetterServiceImpl.java</file>
         </group>
     </open-files>
 </project-private>
