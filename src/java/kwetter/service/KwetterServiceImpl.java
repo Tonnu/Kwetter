@@ -1,15 +1,14 @@
 package kwetter.service;
 
-import Interceptors.CheckWords;
 import Interceptors.TweetInterceptor;
 import com.google.common.eventbus.Subscribe;
-import com.oracle.jrockit.jfr.EventDefinition;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import javax.annotation.PostConstruct;
+import javax.ejb.Stateless;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
@@ -19,6 +18,7 @@ import javax.inject.Named;
 import javax.interceptor.Interceptors;
 import kwetter.dao.TweetDAO;
 import kwetter.dao.UserDAO;
+import kwetter.dao.fireanddonotforgetpleasethankyou;
 import kwetter.domain.Tweet;
 import kwetter.domain.TweetEvent;
 import kwetter.domain.TweetEvent.Options;
@@ -26,13 +26,15 @@ import kwetter.domain.User;
 import kwetter.domain.UserEvent;
 
 @Named("kwetter")
-@SessionScoped //has to be session scoped for now because of initusers(
+@Stateless //has to be session scoped for now because of initusers(
 public class KwetterServiceImpl implements Serializable, KwetterService {
 
     @Inject
+    @fireanddonotforgetpleasethankyou
     private UserDAO userDAO;
 
     @Inject
+    @fireanddonotforgetpleasethankyou
     private TweetDAO tweetDAO;
 
     private String showdata = "tweets";
@@ -150,7 +152,7 @@ public class KwetterServiceImpl implements Serializable, KwetterService {
     @Override
     @Interceptors(TweetInterceptor.class)
     public void submitNewTweet(User submitter, String tweet) {
-        Tweet t = new Tweet(tweet, new Date(), "PC", submitter.getName());
+        Tweet t = new Tweet(tweet, new Date(), "PC", submitter);
         TweetEvent event = new TweetEvent(t, submitter, Options.NEW_TWEET);
         tweetEvents.fire(event);
         tweetDAO.checkForMentions(this.userDAO.findAll(), event.getTweet());
@@ -234,10 +236,16 @@ public class KwetterServiceImpl implements Serializable, KwetterService {
     }
 
     private void initUsers() {
+        System.out.println("users initialized");
+
         User u1 = new User("Hans", "http", "geboren 1");
         User u2 = new User("Frank", "httpF", "geboren 2");
         User u3 = new User("Tom", "httpT", "geboren 3");
         User u4 = new User("Sjaak", "httpS", "geboren 4");
+        userDAO.create(u1);
+        userDAO.create(u2);
+        userDAO.create(u3);
+        userDAO.create(u4);
 
         u1.addFollowing(u2);
         u1.addFollowing(u3);
@@ -247,9 +255,9 @@ public class KwetterServiceImpl implements Serializable, KwetterService {
         u3.addFollowing(u1);
         u2.addFollowing(u1);
 
-        Tweet t1 = new Tweet("Hallo", new Date(), "PC", u1.getName());
-        Tweet t2 = new Tweet("Hallo again", new Date(), "PC", u1.getName());
-        Tweet t3 = new Tweet("Hallo where are you", new Date(), "PC", u1.getName());
+        Tweet t1 = new Tweet("Hallo", new Date(), "PC", u1);
+        Tweet t2 = new Tweet("Hallo again", new Date(), "PC", u1);
+        Tweet t3 = new Tweet("Hallo where are you", new Date(), "PC", u1);
 
         TweetEvent te = new TweetEvent(t1, u1, Options.NEW_TWEET);
         TweetEvent te1 = new TweetEvent(t2, u1, Options.NEW_TWEET);
@@ -259,14 +267,8 @@ public class KwetterServiceImpl implements Serializable, KwetterService {
         tweetEvents.fire(te1);
         tweetEvents.fire(te2);
 
-        userDAO.create(u1);
-        userDAO.create(u2);
-        userDAO.create(u3);
-        userDAO.create(u4);
-        System.out.println("users initialized");
-
         this.loginUsers = userDAO.findAll();
-        this.tlTweets.addAll(u1.getTweets());
+        //this.tlTweets.addAll(u1.getTweets());
 
     }
 

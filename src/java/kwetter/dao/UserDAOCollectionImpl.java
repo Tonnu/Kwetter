@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import kwetter.domain.User;
 
-
+@fireanddoforgetpleasethankyousokind
 public class UserDAOCollectionImpl implements UserDAO, Serializable {
 
     private List<User> users;

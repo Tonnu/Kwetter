@@ -5,29 +5,58 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import javax.persistence.CascadeType;
+import static javax.persistence.CascadeType.REMOVE;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "KwetterUser")
 public class User implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue
     private Long id;
-    
+
+    @Column(unique = true)
     private String name;
     private String web;
     private String bio;
 
+//    @OneToMany(cascade = CascadeType.PERSIST)
+//    @JoinTable(name = "following", joinColumns
+//            = @JoinColumn(name = "following", referencedColumnName = "name"),
+//            inverseJoinColumns
+//          = @JoinColumn(name = "user2", referencedColumnName = "name"))
+    @Transient
     private Collection<User> following = new ArrayList();
+
+    //@OneToMany(cascade = CascadeType.PERSIST)
+//    @JoinTable(name = "followers", joinColumns
+//            = @JoinColumn(name = "followers", referencedColumnName = "name"),
+//            inverseJoinColumns
+//            = @JoinColumn(name = "user2", referencedColumnName = "name"))
+    @Transient
     private Collection<User> followers = new ArrayList();
-    private Collection<Tweet> tweets = new ArrayList();
+
+
+    @Transient
     private Collection<Tweet> mentions = new ArrayList();
 
+    @Transient
     private Tweet lastTweet;
 
     public List<Tweet> getMentions() {
@@ -92,15 +121,7 @@ public class User implements Serializable {
         this.following = following;
     }
 
-    public Collection<Tweet> getTweets() {
-        Collections.sort((List<Tweet>) tweets, Collections.reverseOrder());
-        return Collections.unmodifiableCollection(tweets);
-    }
-
-    public void setTweets(Collection<Tweet> tweets) {
-        this.tweets = tweets;
-    }
-
+  
     public Boolean addFollowing(User following) {
         if (isFollowing(following)) {
             return false;
@@ -127,12 +148,6 @@ public class User implements Serializable {
             }
         }
         return false;
-    }
-
-    public Boolean addTweet(Tweet tweet) {
-        this.lastTweet = tweet;
-        return this.tweets.add(tweet);
-
     }
 
     @Override

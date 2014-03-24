@@ -64,27 +64,28 @@ public class TweetDAOCollectionImpl implements TweetDAO, Serializable {
 
     @Override
     public Collection<Tweet> getTimelineForUser(User u) {
-        ArrayList<Tweet> _tweets = new ArrayList<>();
-        for (User following : u.getFollowing()) {
-            _tweets.addAll(following.getTweets());
-            System.out.println("timeline tweet from " + u.getName());
-        }
-        _tweets.addAll(u.getTweets());
-        for (Tweet tweet : u.getTweets()) {
-            System.out.println("found tweet for user: " + u.getName() + "\n" + tweet.getTweet());
-        }
-        Collections.sort(_tweets, Collections.reverseOrder());
-        return _tweets;
+//        ArrayList<Tweet> _tweets = new ArrayList<>();
+//        for (User following : u.getFollowing()) {
+//            _tweets.addAll(following.getTweets());
+//            System.out.println("timeline tweet from " + u.getName());
+//        }
+//        _tweets.addAll(u.getTweets());
+//        for (Tweet tweet : u.getTweets()) {
+//            System.out.println("found tweet for user: " + u.getName() + "\n" + tweet.getTweet());
+//        }
+//        Collections.sort(_tweets, Collections.reverseOrder());
+//        return _tweets;
+        return null;
     }
 
     @Override
     public void create(@Observes TweetEvent event) {
-        if (event.getType() == Options.NEW_TWEET) {
-            event.getTweeter().addTweet(event.getTweet());
-            tweets.add(event.getTweet());
-
-            checkForHashtags(event.getTweet());
-        }
+//        if (event.getType() == Options.NEW_TWEET) {
+//            event.getTweeter().addTweet(event.getTweet());
+//            tweets.add(event.getTweet());
+//
+//            checkForHashtags(event.getTweet());
+//        }
     }
 
     private void checkForHashtags(Tweet t) {
