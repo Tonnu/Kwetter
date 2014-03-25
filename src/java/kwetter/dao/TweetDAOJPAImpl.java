@@ -103,23 +103,8 @@ public class TweetDAOJPAImpl implements TweetDAO, Serializable {
             query.setParameter("paramUser", uu);
             _tweets.addAll((List<Tweet>) query.getResultList());
         }
-        Collections.sort(_tweets);
+        Collections.sort(_tweets, Collections.reverseOrder());
         return _tweets;
-    }
-    
-    @Override
-    public int getTweetIndexCount(User user, Tweet tweet){
-        Collection<Tweet> tweets = getTimelineForUser(user);
-        TreeSet<Tweet> sortedTweets = new TreeSet<>();
-        sortedTweets.addAll(tweets);
-        int index = 1;
-        for(Tweet t : sortedTweets){
-            if(t.compareTo(tweet) == 0){
-                return index;
-            }
-            index++;
-        }
-        return index;
     }
 
     @Override

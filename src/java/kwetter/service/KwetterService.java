@@ -21,8 +21,6 @@ public interface KwetterService {
     int getUserCount();
     
     int getTweetCountForUser(User u);
-    
-    int getTweetIndexCount(User u, Tweet t);
 
     void create(User user);
 

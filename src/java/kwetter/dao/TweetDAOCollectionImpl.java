@@ -162,21 +162,6 @@ public class TweetDAOCollectionImpl implements TweetDAO, Serializable {
     public void remove(Tweet t, User u) {
         u.removeTweet(t);
     }
-
-    @Override
-    public int getTweetIndexCount(User u, Tweet t) {
-        Collection<Tweet> tweets = getTimelineForUser(u);
-        TreeSet<Tweet> sortedTweets = new TreeSet<>();
-        sortedTweets.addAll(tweets);
-        int index = 1;
-        for(Tweet tweet : sortedTweets){
-            if(t.compareTo(tweet) == 0){
-                return index;
-            }
-            index++;
-        }
-        return index;
-    }
 }
 
 class ValueComparator implements Comparator<String> {

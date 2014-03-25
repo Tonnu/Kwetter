@@ -46,7 +46,7 @@
                             <p:tab id="tweets-tab" title="Tweets">
                                 <h:dataTable id="tweets" var="tltweet" class='main_table' value="#{kwetter.getTimelineForUser(kwetter.loggedInUser)}" rendered="#{kwetter.showdata.equals('tweets')}">
                                     <h:column>
-                                        <b><h:outputText value="#{kwetter.getTweetIndexCount((tltweet.user), tltweet)} #{tltweet.user.name}" /></b>
+                                        <b><h:outputText value="#{tltweet.user.name}" /></b>
                                         &nbsp;&nbsp;<h:outputText value="#{tltweet.datum.toLocaleString()}" />
                                         <h:outputText value="(Just now)" rendered="#{ kwetter.getCurrentDate().getMinutes() - tltweet.datum.getMinutes() gt 1}" /><br />
 

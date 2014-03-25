@@ -32,10 +32,10 @@ import kwetter.domain.UserEvent;
 @ApplicationScoped //has to be session scoped for now because of initusers(
 public class KwetterServiceImpl implements Serializable, KwetterService {
 
-    @Inject @fireanddoforgetpleasethankyousokind //@fireanddonotforgetpleasethankyou
+    @Inject @fireanddonotforgetpleasethankyou //@fireanddoforgetpleasethankyousokind
     private UserDAO userDAO;
 
-    @Inject @fireanddoforgetpleasethankyousokind //@fireanddonotforgetpleasethankyou
+    @Inject @fireanddonotforgetpleasethankyou //@fireanddoforgetpleasethankyousokind
     private TweetDAO tweetDAO;
 
     private String showdata = "tweets";
@@ -47,10 +47,10 @@ public class KwetterServiceImpl implements Serializable, KwetterService {
     private String newTweet = "";
     private String loginUserName = "";
 
-    @Inject @fireanddoforgetpleasethankyousokind //@fireanddonotforgetpleasethankyou
+    @Inject @fireanddonotforgetpleasethankyou //@fireanddoforgetpleasethankyousokind
     private Event<UserEvent> userEvents;
 
-    @Inject @fireanddoforgetpleasethankyousokind //@fireanddonotforgetpleasethankyou
+    @Inject @fireanddonotforgetpleasethankyou //@fireanddoforgetpleasethankyousokind
     private Event<TweetEvent> tweetEvents;
 
     @Override
@@ -243,11 +243,6 @@ public class KwetterServiceImpl implements Serializable, KwetterService {
     }
     
     @Override
-    public int getTweetIndexCount(User u, Tweet t){
-        return tweetDAO.getTweetIndexCount(u, t);
-    }
-    
-    @Override
     public List<Tweet> findAllTweets(User u){
         return tweetDAO.findAllForUser(u);
     }
@@ -311,7 +306,7 @@ public class KwetterServiceImpl implements Serializable, KwetterService {
     }
 
     @Override
-    public void onUserEvent(@Observes @fireanddoforgetpleasethankyousokind UserEvent event) { //@fireanddonotforgetpleasethankyou
+    public void onUserEvent(@Observes @fireanddonotforgetpleasethankyou UserEvent event) { //@fireanddoforgetpleasethankyousokind
         System.out.println("UserEvent got fired");
         switch (event.getType()) {
             case LOGIN:
