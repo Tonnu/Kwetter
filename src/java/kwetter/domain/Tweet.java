@@ -2,13 +2,10 @@ package kwetter.domain;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 
 @Entity
@@ -17,16 +14,8 @@ public class Tweet implements Serializable, Comparable<Tweet> {
     private static final long serialVersionUID = 1L;
     private String tweet;
     
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     private User user;
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
     
     @Id
     @GeneratedValue
@@ -50,6 +39,14 @@ public class Tweet implements Serializable, Comparable<Tweet> {
         this.postDate = datum;
         this.postedFrom = vanaf;
         this.user = sender;
+    }
+    
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getTweet() {

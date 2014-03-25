@@ -6,9 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import javax.persistence.CascadeType;
-import static javax.persistence.CascadeType.REMOVE;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -19,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "KwetterUser")
@@ -35,21 +32,17 @@ public class User implements Serializable {
     private String name;
     private String web;
     private String bio;
-
-//    @OneToMany(cascade = CascadeType.PERSIST)
-//    @JoinTable(name = "following", joinColumns
-//            = @JoinColumn(name = "following", referencedColumnName = "name"),
-//            inverseJoinColumns
-//          = @JoinColumn(name = "user2", referencedColumnName = "name"))
-    @Transient
+    
+    @ManyToMany
+    @JoinTable(name = "Following", joinColumns = { @JoinColumn(name = "user1", referencedColumnName = "id")}, 
+                inverseJoinColumns = { @JoinColumn(name = "user2", referencedColumnName = "id" ) })
     private Collection<User> following = new ArrayList();
 
-    //@OneToMany(cascade = CascadeType.PERSIST)
-//    @JoinTable(name = "followers", joinColumns
-//            = @JoinColumn(name = "followers", referencedColumnName = "name"),
-//            inverseJoinColumns
-//            = @JoinColumn(name = "user2", referencedColumnName = "name"))
-    @Transient
+    @ManyToMany
+    @JoinTable(name = "Followers", joinColumns
+            = @JoinColumn(name = "user1", referencedColumnName = "id"),
+            inverseJoinColumns
+            = @JoinColumn(name = "user2", referencedColumnName = "id"))
     private Collection<User> followers = new ArrayList();
 
 
@@ -58,6 +51,14 @@ public class User implements Serializable {
 
     @Transient
     private Tweet lastTweet;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public List<Tweet> getMentions() {
         return (List<Tweet>) this.mentions;
@@ -113,7 +114,6 @@ public class User implements Serializable {
     }
 
     public Collection<User> getFollowing() {
-
         return Collections.unmodifiableCollection(following);
     }
 
@@ -121,7 +121,6 @@ public class User implements Serializable {
         this.following = following;
     }
 
-  
     public Boolean addFollowing(User following) {
         if (isFollowing(following)) {
             return false;
@@ -187,5 +186,4 @@ public class User implements Serializable {
     public void removeTweet(Tweet t) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 }

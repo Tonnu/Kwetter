@@ -15,10 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Stateless;
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Produces;
-import javax.inject.Named;
 import kwetter.domain.Tweet;
 import kwetter.domain.TweetEvent;
 import kwetter.domain.TweetEvent.Options;
@@ -28,9 +26,11 @@ import kwetter.domain.User;
  *
  * @author Toon
  */
+@fireanddoforgetpleasethankyousokind
+@Stateless
 public class TweetDAOCollectionImpl implements TweetDAO, Serializable {
 
-    private final List<Tweet> tweets;
+    private List<Tweet> tweets;
     private List<String> hashtags;
     private HashMap<String, Integer> counter;
     ValueComparator bvc;
@@ -44,6 +44,28 @@ public class TweetDAOCollectionImpl implements TweetDAO, Serializable {
         bvc = new ValueComparator(counter);
         sorted_counter = new TreeMap<String, Integer>(bvc);
         sorted_tweets = new TreeSet<>();
+    }
+    
+    @Override
+    public int countForUser(User u){
+        int amount = 0;
+        for(Tweet t : tweets){
+            if(t.getUser().getName().equals(u.getName())){
+                amount++;
+            }
+        }
+        return amount;
+    }
+    
+    @Override
+    public List<Tweet> findAllForUser(User u){
+        List<Tweet> _tweets = new ArrayList<>();
+        for(Tweet t : tweets){
+            if(t.getUser().getName().equals(u.getName())){
+                _tweets.add(t);
+            }
+        }
+        return _tweets;
     }
 
     @Override
@@ -64,28 +86,28 @@ public class TweetDAOCollectionImpl implements TweetDAO, Serializable {
 
     @Override
     public Collection<Tweet> getTimelineForUser(User u) {
-//        ArrayList<Tweet> _tweets = new ArrayList<>();
-//        for (User following : u.getFollowing()) {
-//            _tweets.addAll(following.getTweets());
-//            System.out.println("timeline tweet from " + u.getName());
-//        }
-//        _tweets.addAll(u.getTweets());
-//        for (Tweet tweet : u.getTweets()) {
-//            System.out.println("found tweet for user: " + u.getName() + "\n" + tweet.getTweet());
-//        }
-//        Collections.sort(_tweets, Collections.reverseOrder());
-//        return _tweets;
-        return null;
+        ArrayList<Tweet> _tweets = new ArrayList<>();
+        _tweets.addAll(this.findAllForUser(u));
+        
+        for (User following : u.getFollowing()) {
+            _tweets.addAll(this.findAllForUser(following));
+        }
+        
+        Collections.sort(_tweets, Collections.reverseOrder());
+        return _tweets;
     }
 
     @Override
-    public void create(@Observes TweetEvent event) {
-//        if (event.getType() == Options.NEW_TWEET) {
-//            event.getTweeter().addTweet(event.getTweet());
-//            tweets.add(event.getTweet());
-//
-//            checkForHashtags(event.getTweet());
-//        }
+    public void create(@Observes @fireanddoforgetpleasethankyousokind TweetEvent event) {
+        System.out.println("New Collection Tweet for User: " + event.getTweet().getUser().getName());
+        if (event.getType() == Options.NEW_TWEET) {
+            tweets.add(event.getTweet());
+            
+            for(Tweet tw : tweets){
+                System.out.println("Tweet " +tw.getTweet() +" User " + tw.getUser());
+            }
+            checkForHashtags(event.getTweet());
+        }
     }
 
     private void checkForHashtags(Tweet t) {
@@ -139,6 +161,21 @@ public class TweetDAOCollectionImpl implements TweetDAO, Serializable {
     @Override
     public void remove(Tweet t, User u) {
         u.removeTweet(t);
+    }
+
+    @Override
+    public int getTweetIndexCount(User u, Tweet t) {
+        Collection<Tweet> tweets = getTimelineForUser(u);
+        TreeSet<Tweet> sortedTweets = new TreeSet<>();
+        sortedTweets.addAll(tweets);
+        int index = 1;
+        for(Tweet tweet : sortedTweets){
+            if(t.compareTo(tweet) == 0){
+                return index;
+            }
+            index++;
+        }
+        return index;
     }
 }
 

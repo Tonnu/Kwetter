@@ -5,9 +5,6 @@
  */
 package kwetter.domain;
 
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-
 /**
  *
  * @author Toon

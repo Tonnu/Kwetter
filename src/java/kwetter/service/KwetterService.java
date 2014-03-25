@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import kwetter.domain.Tweet;
 import kwetter.domain.User;
+import kwetter.domain.UserEvent;
 
 /**
  *
@@ -17,7 +18,11 @@ import kwetter.domain.User;
  */
 public interface KwetterService {
 
-    int count();
+    int getUserCount();
+    
+    int getTweetCountForUser(User u);
+    
+    int getTweetIndexCount(User u, Tweet t);
 
     void create(User user);
 
@@ -28,6 +33,8 @@ public interface KwetterService {
     User find(Object id);
 
     List<User> findAll();
+    
+    List<Tweet> findAllTweets(User u);
 
     void findTweetsContaining();
 
@@ -80,4 +87,6 @@ public interface KwetterService {
     void addFollower(User toFollow);
     
     void stopFollowing(User toUnFollow);
+
+    public void onUserEvent(UserEvent event);
 }

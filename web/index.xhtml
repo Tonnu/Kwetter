@@ -57,7 +57,7 @@
                     <ul id="stats-nav">
                         <li>
                             <div id="profile-tweets">
-                                <h:commandLink action="#{kwetter.displayProfile(kwetter.loggedInUser.name, 'tweets')}" value="Your Tweets #{fn:length(kwetter.selectedUser.tweets)}">
+                                <h:commandLink action="#{kwetter.displayProfile(kwetter.loggedInUser.name, 'tweets')}" value="Your Tweets #{kwetter.getTweetCountForUser(kwetter.selectedUser)}">
                                 </h:commandLink><br />
                                 <h:outputText value="#{kwetter.selectedUser.lastTweet.datum.toLocaleString()}" /><br />
                                 <h:outputText value="#{kwetter.selectedUser.lastTweet.tweet}" /> <br />

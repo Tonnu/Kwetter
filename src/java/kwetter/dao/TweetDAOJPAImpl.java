@@ -8,6 +8,7 @@ package kwetter.dao;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,10 +47,27 @@ public class TweetDAOJPAImpl implements TweetDAO, Serializable {
         sorted_counter = new TreeMap<String, Integer>(bvc);
         sorted_tweets = new TreeSet<>();
     }
+    
+    @Override
+    public int countForUser(User u) {
+        Query query = em.createQuery("SELECT COUNT(tweet) FROM Tweet tweet WHERE tweet.user = :userParam", Tweet.class);
+        query.setParameter("userParam", u);
+        long longCount = (long)query.getSingleResult();
+        int count = (int)longCount;
+        System.out.println("Tweet count for user: " + count);
+        return count;
+    }
+    
+    @Override
+    public List<Tweet> findAllForUser(User u){
+        Query query = em.createQuery("SELECT tweet FROM Tweet tweet WHERE tweet.user = :userParam", Tweet.class);
+        query.setParameter("userParam", u);
+        return (List<Tweet>)query.getResultList();
+    }
 
     @Override
     public List<Tweet> find(String query) {
-        Query q = em.createQuery("SELECT e FROM tweet e WHERE e.tweet LIKE ?");
+        Query q = em.createQuery("SELECT e FROM Tweet e WHERE e.tweet LIKE ?", Tweet.class);
         String qq = "'%'" + query + "'%'";
         q.setParameter(1, qq);
         return (List<Tweet>) q.getResultList();
@@ -57,13 +75,15 @@ public class TweetDAOJPAImpl implements TweetDAO, Serializable {
 
     @Override
     public List<Tweet> findAll() {
-        Query query = em.createQuery("SELECT e FROM tweet e");
+        Query query = em.createQuery("SELECT tweet FROM Tweet tweet", Tweet.class);
         return (List<Tweet>) query.getResultList();
     }
 
     @Override
-    public void create(@Observes TweetEvent event) {
-        em.persist(event.getTweet());
+    public void create(@Observes @fireanddonotforgetpleasethankyou TweetEvent event) {
+        Tweet tweet = event.getTweet();
+        System.out.println("New JPA Tweet for User: " + tweet.getUser().getName());
+        em.persist(tweet);
     }
 
     @Override
@@ -74,17 +94,32 @@ public class TweetDAOJPAImpl implements TweetDAO, Serializable {
     @Override
     public Collection<Tweet> getTimelineForUser(User u) {
         List<Tweet> _tweets = new ArrayList<>();
-        Query query = em.createQuery("SELECT t FROM tweet t WHERE t.user.name = ?");
-        query.setParameter(1, u.getName());
+        Query query = em.createQuery("SELECT tweet FROM Tweet tweet WHERE tweet.user = :paramUser", Tweet.class);
+        
+        query.setParameter("paramUser", u);
         _tweets.addAll((List<Tweet>) query.getResultList());
 
         for (User uu : u.getFollowing()) {
-            query.setParameter(1, uu.getName());
+            query.setParameter("paramUser", uu);
             _tweets.addAll((List<Tweet>) query.getResultList());
         }
-
+        Collections.sort(_tweets);
         return _tweets;
-
+    }
+    
+    @Override
+    public int getTweetIndexCount(User user, Tweet tweet){
+        Collection<Tweet> tweets = getTimelineForUser(user);
+        TreeSet<Tweet> sortedTweets = new TreeSet<>();
+        sortedTweets.addAll(tweets);
+        int index = 1;
+        for(Tweet t : sortedTweets){
+            if(t.compareTo(tweet) == 0){
+                return index;
+            }
+            index++;
+        }
+        return index;
     }
 
     @Override
@@ -116,7 +151,6 @@ public class TweetDAOJPAImpl implements TweetDAO, Serializable {
                 c++;
             }
         }
-
         return _list;
     }
 

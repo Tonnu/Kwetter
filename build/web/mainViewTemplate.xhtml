@@ -46,7 +46,7 @@
                             <p:tab id="tweets-tab" title="Tweets">
                                 <h:dataTable id="tweets" var="tltweet" class='main_table' value="#{kwetter.getTimelineForUser(kwetter.loggedInUser)}" rendered="#{kwetter.showdata.equals('tweets')}">
                                     <h:column>
-                                        <b><h:outputText value="#{tltweet.sender}" /></b>
+                                        <b><h:outputText value="#{kwetter.getTweetIndexCount((tltweet.user), tltweet)} #{tltweet.user.name}" /></b>
                                         &nbsp;&nbsp;<h:outputText value="#{tltweet.datum.toLocaleString()}" />
                                         <h:outputText value="(Just now)" rendered="#{ kwetter.getCurrentDate().getMinutes() - tltweet.datum.getMinutes() gt 1}" /><br />
 
@@ -57,7 +57,7 @@
                             <p:tab id="mentions-tab" title="Mentions">
                                 <h:dataTable id="mentions" var="mention" class='main_table' value="#{kwetter.getMentionsForUser(kwetter.loggedInUser)}" rendered="#{kwetter.showdata.equals('tweets')}">
                                     <h:column>
-                                        <b><h:outputText value="#{mention.sender}" /></b>
+                                        <b><h:outputText value="#{mention.user.name}" /></b>
                                         &nbsp;&nbsp;<h:outputText value="#{mention.datum.toLocaleString()}" /><br />
                                         <h:outputText value="#{mention.tweet}" />
                                     </h:column>
@@ -68,7 +68,7 @@
                     <h:form id="search-results">
                         <h:dataTable id="results" class="main_table" value="#{kwetter.foundTweets}" var="found" >
                             <h:column>
-                                <b><h:outputText value="#{found.sender}" /></b>
+                                <b><h:outputText value="#{found.user.name}" /></b>
                                 &nbsp;&nbsp;<h:outputText value="#{found.datum.toString()}" /><br />
                                 <h:outputText value="#{found.tweet}" />
                             </h:column>
@@ -104,7 +104,7 @@
                             <ul id="stats-nav">
                                 <li>
                                     <div id="profile-tweets">
-                                        <h:commandLink action="#{kwetter.displayProfile(kwetter.loggedInUser.name, 'tweets')}" value="Your Tweets #{fn:length(kwetter.selectedUser.tweets)}">
+                                        <h:commandLink action="#{kwetter.displayProfile(kwetter.loggedInUser.name, 'tweets')}" value="Your Tweets #{kwetter.getTweetCountForUser(kwetter.selectedUser)}">
                                         </h:commandLink><br />
                                         <h:outputText value="#{kwetter.selectedUser.lastTweet.datum.toLocaleString()}" /><br />
                                         <h:outputText value="#{kwetter.selectedUser.lastTweet.tweet}" /> <br />

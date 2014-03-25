@@ -7,6 +7,7 @@ package kwetter.dao;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -23,10 +24,10 @@ public class UserDAOJPAImpl implements UserDAO, Serializable {
 
     @PersistenceContext(name = "KwetterPU")
     private EntityManager em;
-
+    
     @Override
     public int count() {
-        Query query = em.createQuery("SELECT COUNT(e) FROM KwetterUser e");
+        Query query = em.createQuery("SELECT COUNT(user) FROM User user", User.class);
         return query.getFirstResult();
     }
 
@@ -42,7 +43,7 @@ public class UserDAOJPAImpl implements UserDAO, Serializable {
 
     @Override
     public List<User> findAll() {
-        Query query = em.createQuery("SELECT e FROM KwetterUser e");
+        Query query = em.createQuery("SELECT user FROM User user", User.class);
         for (User u : (List<User>) query.getResultList()) {
             System.out.println("found users in findall: " + u.getName());
         }
@@ -56,14 +57,14 @@ public class UserDAOJPAImpl implements UserDAO, Serializable {
 
     @Override
     public User findUsingUsername(String username) {
-        Query query = em.createQuery("SELECT e FROM KwetterUser e WHERE e.username = ?");
-        query.setParameter(1, username);
-        return (User) query.getSingleResult();
+        Query query = em.createQuery("SELECT user FROM User user WHERE user.name = :paramUsername", User.class);
+        query.setParameter("paramUsername", username);
+        User foundUser = (User) query.getSingleResult();
+        return foundUser ;
     }
 
     @Override
     public void remove(User user) {
         em.remove(em.merge(user));
     }
-
 }

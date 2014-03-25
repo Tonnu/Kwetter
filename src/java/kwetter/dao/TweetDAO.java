@@ -21,6 +21,12 @@ public interface TweetDAO {
     List<Tweet> find(String query);
 
     List<Tweet> findAll();
+    
+    List<Tweet> findAllForUser(User u);
+    
+    int countForUser(User u);
+    
+    int getTweetIndexCount(User u, Tweet t);
 
     void create(@Observes TweetEvent event);
 

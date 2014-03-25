@@ -3,6 +3,7 @@ package kwetter.dao;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.Stateless;
 import kwetter.domain.User;
 
 @fireanddoforgetpleasethankyousokind
@@ -26,7 +27,10 @@ public class UserDAOCollectionImpl implements UserDAO, Serializable {
 
     @Override
     public void edit(User user) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if(this.users.contains(user)){
+            this.users.remove(user);
+            this.users.add(user);
+        }
     }
 
     @Override

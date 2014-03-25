@@ -55,7 +55,7 @@
             <div id="data-table">
                 <ui:define name="main-data">
                     <h:form id="main-data-form">
-                        <h:dataTable id="tweets" class="main_table" value="#{kwetter.selectedUser.tweets}" var="tweet" rendered="#{kwetter.showdata.equals('tweets')}">
+                        <h:dataTable id="tweets" class="main_table" value="#{kwetter.findAllTweets(kwetter.selectedUser)}" var="tweet" rendered="#{kwetter.showdata.equals('tweets')}">
                             <h:column>
                                 <b><h:outputText value="#{kwetter.selectedUser.name}" /></b>
                                 &nbsp;&nbsp;<h:outputText id="tweet-date" value="#{tweet.getDatum().toLocaleString()}" /><br />
@@ -113,7 +113,7 @@
                         </li>
                         <li>
                             <div id="profile-tweets">
-                                <h:commandLink action="#{kwetter.setShowdata('tweets')}" value="#{fn:length(kwetter.selectedUser.tweets)} Tweets">
+                                <h:commandLink action="#{kwetter.setShowdata('tweets')}" value="#{kwetter.getTweetCountForUser(kwetter.selectedUser)} Tweets">
                                     <f:ajax event="action" render=":main-data-form" execute="@form" />
                                 </h:commandLink>
                             </div>
