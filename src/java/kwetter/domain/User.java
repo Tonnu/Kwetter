@@ -17,9 +17,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "KwetterUser")
+@XmlRootElement
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -32,6 +35,12 @@ public class User implements Serializable {
     private String name;
     private String web;
     private String bio;
+    private String password;
+    
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(name ="kwetteruser_role", joinColumns = {@JoinColumn(name= "username", referencedColumnName = "name") },
+            inverseJoinColumns = { @JoinColumn(name = "groupname", referencedColumnName = "name")})
+    private Collection<Role> roles;
     
     @ManyToMany
     @JoinTable(name = "Following", joinColumns = { @JoinColumn(name = "user1", referencedColumnName = "id")}, 
@@ -51,6 +60,27 @@ public class User implements Serializable {
 
     @Transient
     private Tweet lastTweet;
+
+    @XmlTransient
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
+    }
+    
+    public void addRole(Role role){
+        this.roles.add(role);
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public Long getId() {
         return id;
@@ -83,8 +113,9 @@ public class User implements Serializable {
         this.name = naam;
     }
 
-    public User(String naam, String web, String bio) {
+    public User(String naam, String password, String web, String bio) {
         this.name = naam;
+        this.password = password;
         this.web = web;
         this.bio = bio;
     }
@@ -113,6 +144,7 @@ public class User implements Serializable {
         this.web = web;
     }
 
+    @XmlTransient
     public Collection<User> getFollowing() {
         return Collections.unmodifiableCollection(following);
     }
@@ -171,6 +203,7 @@ public class User implements Serializable {
         return "twitter.domain.User[naam=" + name + "]";
     }
 
+    @XmlTransient
     public Collection<User> getFollowers() {
         return Collections.unmodifiableCollection(followers);
     }

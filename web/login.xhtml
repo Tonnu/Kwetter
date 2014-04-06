@@ -2,17 +2,28 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui" 
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Kwetter Login</title>
     </h:head>
     <h:body>
-        <h:form>
-            <h:selectOneMenu value="#{kwetter.loginUserName}">
-                <f:selectItems value="#{kwetter.loginUsers}" var="user" itemValue="#{user.name}" itemLabel="#{user.name}"/>  
+        <!--<h:form>
+           <h:selectOneMenu value="{kwetter.loginUserName}">
+                <f:selectItems value="{kwetter.loginUsers}" var="user" itemValue="{user.name}" itemLabel="{user.name}"/>  
             </h:selectOneMenu>
-            <h:commandButton action="#{kwetter.login()}" />
-        </h:form>
+            <h:commandButton action="{kwetter.login()}" />
+        </h:form>-->
+        
+        <p:panel header="Login From">
+            <form method="POST" action="j_security_check">
+                Username: <input type="text" name="j_username" />
+                Password: <input type="password" name="j_password" />
+                <br />
+                <input type="submit" value="Login" />
+                <input type="reset" value="Reset" />
+            </form> 
+        </p:panel>
     </h:body>
 </html>
 

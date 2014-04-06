@@ -65,6 +65,8 @@ public interface KwetterService {
     List<Tweet> getTlTweets();
 
     String login();
+    
+    String logout();
 
     void remove(User user);
 

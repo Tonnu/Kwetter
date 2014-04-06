@@ -88,7 +88,7 @@ public class TweetDAOJPAImpl implements TweetDAO, Serializable {
 
     @Override
     public void remove(Tweet t, User u) {
-        em.remove(t);
+        em.remove(em.merge(t));
     }
 
     @Override

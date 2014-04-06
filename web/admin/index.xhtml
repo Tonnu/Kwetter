@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <title>Secured Admin Area</title>
+    </h:head>
+    <h:body>
+        <h1>Hello Admin</h1>
+        <br />
+        <h:link outcome="/index" value="Back to Homepage" />
+        <br />
+        <h:dataTable id="tweets" var="tltweet" class='main_table' value="#{kwetterCleaner.findAll()}">
+
+            <h:column>
+                <b><h:outputText value="#{tltweet.user.name}" /></b>
+                &nbsp;&nbsp;<h:outputText value="#{tltweet.datum.toLocaleString()}" />
+
+                <br />
+                <h:outputText value="#{tltweet.tweet}" />
+                <h:form>
+                    <h:commandButton action="#{kwetterCleaner.remove(tltweet, tltweet.user)}" value="Remove tweet" />
+                </h:form>
+                <br /><br />
+            </h:column>
+
+        </h:dataTable>
+    </h:body>
+</html>
+
