@@ -3,29 +3,35 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package kwettergo.jms;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
+import javax.jms.JMSConsumer;
+import javax.jms.JMSContext;
 import javax.jms.JMSException;
+import javax.jms.JMSProducer;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
+import javax.jms.Queue;
 import javax.jms.Session;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 /**
- * Class responsible for sending and receiving messages to an endpoint of a channel
- * 
+ * Class responsible for sending and receiving messages to an endpoint of a
+ * channel
+ *
  * @author user
  */
 public class MessagingGateway {
-    
+
+    private static Queue queue;
+
     /*
      * Connection to JMS
      */
@@ -34,50 +40,54 @@ public class MessagingGateway {
 
     private MessageProducer producer; // for sending messages
     private MessageConsumer consumer; // for receiving messages
-    
+
+    private JMSConsumer queueConsumer;
+    private JMSProducer jmsProducer;
     private String factoryName = "queueConnectionFactory";
-    
-    public MessagingGateway(Destination receiverDestination){
+    private static final String JNDI_CONNECTION_FACTORY = "jms/__defaultConnectionFactory";
+
+    private static String destinationName = "";
+
+    /**
+     * @param <T> the return type
+     * @param retvalClass the returned value's {@link Class}
+     * @param jndi the JNDI path to the resource
+     * @return the resource at the specified {@code jndi} path
+     */
+    private static <T> T lookup(Class<T> retvalClass, String jndi) {
         try {
-            // connect to the sender channel
-            
-            
-            Context jndiContext = new InitialContext();
-            ConnectionFactory connectionFactory = (ConnectionFactory) jndiContext.lookup(factoryName);
-            connection = connectionFactory.createConnection();
-            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            
-            producer = session.createProducer(null);
-            
-            // connect to the receiver channel
-            consumer = session.createConsumer(receiverDestination);
-            consumer.setMessageListener(new MessageListener() {
-                public void onMessage(Message message) {
-                    try {
-                        consumer.getMessageListener().onMessage(message);
-                    } catch (JMSException ex) {
-                        System.err.println(String.format("JMSException in MessagingGateway constructor: %s", ex.getMessage()));
-                    }
-                }
-            });
-        } catch (JMSException ex) {
-            System.err.println(String.format("JMSException in MessagingGateway constructor: %s", ex.getMessage()));
+            return retvalClass.cast(InitialContext.doLookup(jndi));
         } catch (NamingException ex) {
-            System.err.println(String.format("JMSException in MessagingGateway constructor: %s", ex.getMessage()));
+            throw new IllegalArgumentException("failed to lookup instance of " + retvalClass + " at " + jndi, ex);
         }
     }
-    
-    public static Destination getDestination(String destinationName){
+
+    public MessagingGateway(String destinationName) {
+        MessagingGateway.destinationName = destinationName;
+        //Context jndiContext = new InitialContext();
+        ConnectionFactory connectionFactory = (ConnectionFactory) lookup(ConnectionFactory.class, JNDI_CONNECTION_FACTORY);
+        JMSContext jmsContext = connectionFactory.createContext();
+        queue = lookup(Queue.class, destinationName);
+        jmsProducer = jmsContext.createProducer();
+        queueConsumer = jmsContext.createConsumer(queue);
+        queueConsumer.setMessageListener(new MessageListener() {
+            @Override
+            public void onMessage(Message message) {
+                System.out.println("inside messaginggateway creating new messagelistener");
+                queueConsumer.getMessageListener().onMessage(message);
+            }
+        });
+    }
+
+    public static Destination getDestination(String destinationName) {
+        MessagingGateway.destinationName = destinationName;
         Destination requestorDestination = null;
-        try {
-            Context jndiContext = new InitialContext();
-            requestorDestination = (Destination) jndiContext.lookup(destinationName);
-        } catch (NamingException ex) {
-            System.err.println(String.format("JMSException in MessagingGateway constructor: %s", ex.getMessage()));
-        }
-        return requestorDestination;
+        //requestorDestination = (Destination) lookup(Queue.class, destinationName);
+        queue = lookup(Queue.class, destinationName);
+        //return requestorDestination;
+        return queue;
     }
-    
+
     public void start() {
         try {
             connection.start();
@@ -85,8 +95,8 @@ public class MessagingGateway {
             System.err.println(String.format("JMSException in MessagingGateway start() : %s", ex.getMessage()));
         }
     }
-    
-    public Message createMsg(String body){
+
+    public Message createMsg(String body) {
         Message msg = null;
         try {
             msg = session.createTextMessage(body);
@@ -95,21 +105,17 @@ public class MessagingGateway {
         }
         return msg;
     }
-    
-    public void setListener(MessageListener l){
-        try {
-            this.consumer.setMessageListener(l);
-        } catch (JMSException ex) {
-            System.err.println(String.format("JMSException in MessagingGateway setListener() : %s", ex.getMessage()));
-        }
+
+    public void setListener(MessageListener l) {
+        this.queueConsumer.setMessageListener(l);
     }
 
     public void send(Message msg, Destination requestorDestination) {
-        try {            
-            producer.send(requestorDestination, msg);
-        } catch (JMSException ex) {
-           System.err.println(String.format("JMSException in MessagingGateway send(Message msg, Destination requestorDestination) : \n %s", ex.getMessage()));
-        }
+        jmsProducer.send(requestorDestination, msg);
+    }
+
+    public void send(String msg, Destination requestorDestination) {
+        jmsProducer.send(requestorDestination, msg);
     }
 
 }

@@ -11,14 +11,16 @@
   </resources>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="KwetterGo.jar" size="33063" download="eager" />
-    <jar href="lib/gson-2.2.4.jar" size="207141" download="eager" />
+    <jar href="KwetterGo.jar" size="30057" download="eager" />
+    <jar href="lib/gf-client.jar" size="24885" download="eager" />
+    <jar href="lib/gson-2.2.4.jar" size="207142" download="eager" />
     <jar href="lib/javaee-api-7.0.jar" size="2172616" download="eager" />
+    <jar href="lib/jms.jar" size="72859" download="eager" />
   </resources>
 <security>
   <all-permissions/>
 </security>
-  <applet-desc  width="800" height="600" main-class="kwettergo.KwetterGo"  name="KwetterGo" >
+  <applet-desc  width="800" height="600" main-class="KwetterFrame"  name="KwetterGo" >
   </applet-desc>
   <update check="always"/>
 </jnlp>
