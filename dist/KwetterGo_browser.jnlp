@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="KwetterGo_browser.jnlp">
+  <information>
+    <title>KwetterGo</title>
+    <vendor>Toon</vendor>
+    <description>null</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <jfx:javafx-runtime version="2.2+" href="http://javadl.sun.com/webapps/download/GetFile/javafx-latest/windows-i586/javafx2.jnlp"/>
+  </resources>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="KwetterGo.jar" size="33063" download="eager" />
+    <jar href="lib/gson-2.2.4.jar" size="207141" download="eager" />
+    <jar href="lib/javaee-api-7.0.jar" size="2172616" download="eager" />
+  </resources>
+<security>
+  <all-permissions/>
+</security>
+  <applet-desc  width="800" height="600" main-class="kwettergo.KwetterGo"  name="KwetterGo" >
+  </applet-desc>
+  <update check="always"/>
+</jnlp>
