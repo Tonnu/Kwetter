@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <title>Hello REST World!</title>
+        <meta name="viewport" content="width=device-width"/>
+        <h:outputScript target="head" library="javascript" name="jquery-1.7.1.min.js"/>
+        <h:outputScript target="head" library="javascript" name="helloWorld.js"/>
+    </h:head>
+    <h:body>
+        Username:
+        <input id="username" type="text" />
+        <br />
+        <input onclick="getHelloWorld(username.value)" value="Say Hello!" type="submit" />
+        <div id="helloWorld"></div>
+
+    </h:body>
+</html>

@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+        <h:outputScript library="js" name="main.js" />
+        <script src="resources/javascript/jquery-1.7.1.min.js"/>
+    </h:head>
+    <h:body>
+        <b>All Users</b> <br />
+        <c:forEach var="user" items="#{userBean.users}">
+            <h:outputText value="#{user.userName} " /><br />
+        </c:forEach>
+
+        <br /><br />
+        <h:form id="userForm">
+            Username: 
+            <h:inputText id="userinput" value="#{userBean.username}">
+                <f:ajax event="keyup" render="userForm" />
+            </h:inputText><br />
+            
+            <br />
+            <b>Selected user</b><br />
+            <h:outputText value="Username: #{userBean.selectedUser.userName}" /><br/>
+            <h:outputText value="Firstname: #{userBean.selectedUser.firstName}" /> <br/>
+            <h:outputText value="Lastname: #{userBean.selectedUser.lastName}" />
+        </h:form>
+        <br/>
+        <h:form id="newUser">
+            <b>New User</b><br/>
+            Username: <h:inputText id="username" value="#{userBean.createUsername}"/><br/>
+            First name: <h:inputText id="firstname" value="#{userBean.createFirstname}"/><br/>
+            Last name: <h:inputText id="lastname" value="#{userBean.createLastname}"/><br/>
+            
+            <h:commandButton action="#{userBean.createUser()}" value="Create user" />
+            <h:commandButton action="#{userBean.updateUser()}" value="Update user" />
+            <br/><br/>
+        </h:form>
+
+    </h:body>
+
+</html>
+

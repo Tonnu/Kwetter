@@ -1,0 +1,6 @@
+org\netbeans\rest\application\config\ApplicationConfig.class
+org\kwetter\resources\UserResource.class
+controller\UserDAO.class
+org\kwetter\model\User.class
+org\kwetter\resources\HelloWorld.class
+controller\UserDAOImpl.class

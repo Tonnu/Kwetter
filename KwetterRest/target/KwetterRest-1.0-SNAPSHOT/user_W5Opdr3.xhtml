@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <title>Hello REST World!</title>
+        <meta name="viewport" content="width=device-width"/>
+    </h:head>
+    <h:body>
+        <form id="userForm">
+            <div>
+                Username: 
+                <input id="searchUser" type="text" />
+                <br />
+                <button id="btnSearch">Search User</button>
+                <br />
+                Selected user: 
+                <br /> <br />
+                <div id="selectedUser">
+                    <ul>
+                    </ul>
+                </div>
+                <br />
+                <input id="btnSearchAll" value="Get All Users" type="submit" />
+                <br />
+
+                User name: <input id="username" name="username"/><br />
+                First name: <input id="firstname" name="firstname" /><br />
+                Last name: <input id="lastname" name="lastname" /><br />
+                <input id="btnAddUser" value="Add New User" type="submit" />
+                <input id="btnUpdateUser" value="Update Existing User" type="submit" />
+            </div>
+        </form>
+        <script src="resources/javascript/jquery-1.7.1.min.js"/>
+        <script src="resources/javascript/userController.js" />
+    </h:body>
+</html>
